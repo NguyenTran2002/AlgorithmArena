@@ -2,11 +2,18 @@ from universal_imports import *
 
 def txt_file_to_py_file(txt_path):
     """
+    DESCRIPTION:
+        Convert a text file (.txt) to a Python file (.py) by renaming the file.
+
     INPUT SIGNATURE:
-        path (string): a path pointing to a text file to be converted to python file
+        txt_path (string): a path pointing to a text file to be converted to python file
 
     OUTPUT SIGNATURE:
-        new_path (string): a path pointing to the converted python file
+        py_path (string): a path pointing to the converted python file
+        error_message (string) IF the input file does not exist
+
+    CAUTION:
+        Both path variables above are RELATIVE to the directory of the file that called this function
     """
 
     if os.path.exists(txt_path):
