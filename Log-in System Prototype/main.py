@@ -77,11 +77,6 @@ def logout():
 	logout_user()
 	return redirect(url_for("home"))
 
-
-# @app.route("/")
-# def home():
-# 	return render_template("home.html")
-
 @app.route("/")
 def home():
     # Retrieve the current user's name from current_user object
