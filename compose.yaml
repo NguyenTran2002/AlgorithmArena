@@ -17,7 +17,7 @@ services:
     expose:
       - "1111"
   Database:
-    build: ./Q&A
+    build: ./Database
     ports:
       - "7432"
 
