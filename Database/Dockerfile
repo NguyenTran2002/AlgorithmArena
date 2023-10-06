@@ -45,4 +45,4 @@ USER appuser
 EXPOSE 7432
 
 # Run the application.
-CMD python3 db.py
+CMD python3 database.py
