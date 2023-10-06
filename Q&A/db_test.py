@@ -5,7 +5,7 @@ import json
 data = {'problem': 'binary_search'}
 
 # Send a POST request to the URL
-url = 'http://127.0.0.1:5000'
+url = 'http://127.0.0.1:7432'
 response = requests.post(url, json=data)
 
 # Check the response
