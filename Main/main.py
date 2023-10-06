@@ -8,7 +8,7 @@ problem = "binary_search"
 
 # Define the path to the Markdown problem file
 problem_file = 'Problems/' + problem + '.md'
-evaluation_service_url = 'http://evaluation:1111/evaluate'  # Replace with the actual URL of the evaluation microservice
+evaluation_service_url = 'http://evaluation:1111'  # Replace with the actual URL of the evaluation microservice
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
