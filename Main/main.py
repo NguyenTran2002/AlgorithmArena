@@ -8,7 +8,7 @@ problem = "binary_search"
 
 # Define the path to the Markdown problem file
 problem_file = 'Problems/' + problem + '.md'
-evaluation_service_url = 'http://Evaluation:1111'  # Replace with the actual URL of the evaluation microservice
+evaluation_service_url = 'http://evaluation:1111'  # Replace with the actual URL of the evaluation microservice
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -28,9 +28,9 @@ def index():
         
         # Send a POST request to the evaluation microservice
         try:
-            response = requests.post(evaluation_service_url, json=data)
+            response = requests.post(evaluation_service_url, json = jsonify(data))
             response_data = response.json()
-            message = response_data.get('message', 'Error: No response from the evaluation microservice')
+            message = response_data.get('result', 'Error: No response from the evaluation microservice')
 
         except Exception as e:
             message = f"Error: {str(e)}"
@@ -40,4 +40,4 @@ def index():
     return render_template('index.html', problem=html_text)
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", debug=True, port=2727)
+    app.run(host="0.0.0.0", debug=True, port = 2727)

@@ -12,11 +12,13 @@ passed all test cases, or if not returns the test case that it failed on in a js
 folder_path = "QnA/test_cases_and_answers"
 file_name = "binary_search.json"
 
-main_url = 'http://Main:2727'
-database_url = 'http://Databases/7432'
+main_url = 'http://main:2727'
+database_url = 'http://databases/7432'
 
+app = Flask(__name__)
 
-def main():
+@app.route('/', methods=['POST'])
+def evaluate():
     """
     1. get the json object from main that has
         "user_code" : user code that is in str format
@@ -32,6 +34,7 @@ def main():
     try:
         data = request.get_json()
         main_response_data = data.json()
+        print(main_response_data)
         data_dict = json.load(main_response_data)
     except Exception as e:
         message = f"Error: {str(e)}"
@@ -72,4 +75,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    app.run(host="0.0.0.0", debug=True, port = 1111)
