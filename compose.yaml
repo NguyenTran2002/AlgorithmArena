@@ -8,17 +8,17 @@
 # database or a cache. For examples, see the Awesome Compose repository:
 # https://github.com/docker/awesome-compose
 services:
-  Main:
+  main:
     build: ./Main
-    expose:
+    ports:
       - "2727:2727"
-  Evaluation:
+  evaluation:
     build: ./Evaluation
     expose:
       - "1111"
-  Database:
+  database:
     build: ./Database
-    ports:
+    expose:
       - "7432"
 
 
