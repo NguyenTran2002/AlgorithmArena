@@ -4,7 +4,7 @@ def save_string_as_python_file(file_name, code):
 
     INPUT SIGNATURE:
         file_name (str): The name of the Python file to be created.
-        content (str): The Python code to be written to the file.
+        code (str): The Python code to be written to the file.
     
     OUTPUT SIGNATURE:
         bool: True if the file was successfully created and written, False otherwise.
