@@ -17,19 +17,7 @@ def get_test_cases():
             return jsonify({'Error 1 Database': 'Missing "problem" in the request data'}), 400
         
         else:
-
             problem = data['problem']
-        
-            # file_name = f'{problem}.json'
-            # file_path = f'test_cases_and_answers/{file_name}'
-            
-            # # Check if the json file exists in the solutions directory
-            # if not os.path.exists(file_path):
-            #     return jsonify({'Error 2 Database': f'File {file_name} not found'}), 404
-            
-            # else:
-            #     return read_json_file(file_name)
-            
             return read_json_file("test_cases_and_answers/binary_search.json")
             
     except Exception as e:
