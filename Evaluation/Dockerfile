@@ -37,6 +37,10 @@ COPY . .
 # into this layer.
 RUN pip install --upgrade pip
 RUN python -m pip install -r requirements.txt
+RUN chmod +rw user_binary_search.py
+RUN chmod +rw user_program_test.py
+RUN chmod +rw save_string_as_py.py
+RUN chmod +rw user_binary_search.py
 
 # Switch to the non-privileged user to run the application.
 USER appuser

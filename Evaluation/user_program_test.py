@@ -53,7 +53,7 @@ def evaluate():
     
     # doing number 3
     # DO NOT REMOVE THE FOLLOWING PRINT STATEMENT UNDER ANY CIRCUMSTANCE (Nguyen)
-    print("Success in saving input string as Python file:",
+    print("Success in saving input string as Python file:\n",\
         save_string_as_py.save_string_as_python_file("user_binary_search.py", data_dict["user_code"]))
 
     from user_binary_search import Solution
