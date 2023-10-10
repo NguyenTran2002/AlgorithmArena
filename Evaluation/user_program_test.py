@@ -3,8 +3,10 @@ from flask import Flask, request, jsonify, Response
 import os
 import requests
 # from binary_search_test import Solution
-import save_string_as_py
+# import save_string_as_py
 from user_binary_search import Solution
+from exec_str import run_method_from_string
+
 """
 This function imports a .py file that has the user written program, runs it, and returns whether the program
 passed all test cases, or if not returns the test case that it failed on in a json object.
@@ -53,17 +55,18 @@ def evaluate():
     
     # doing number 3
     # DO NOT REMOVE THE FOLLOWING PRINT STATEMENT UNDER ANY CIRCUMSTANCE (Nguyen)
-    print("Success in saving input string as Python file:\n",\
-        save_string_as_py.save_string_as_python_file("user_binary_search.py", data_dict["user_code"]))
+    # print("Success in saving input string as Python file:\n",\
+    #     save_string_as_py.save_string_as_python_file("user_binary_search.py", data_dict["user_code"]))
 
-    from user_binary_search import Solution
+    # from user_binary_search import Solution
 
     # doing number 4 (assuming import works with save_string_as_py file)
     my_solution = Solution()
     passed = True
     arr_length = len(test_cases_answers["input_arrays"])
     for i in range(arr_length):
-        result = my_solution.binary_search(test_cases_answers["input_arrays"][i], test_cases_answers["input_targets"][i])
+        # result = my_solution.binary_search(test_cases_answers["input_arrays"][i], test_cases_answers["input_targets"][i])
+        result = run_method_from_string(data_dict["user_code"], "binary_search", test_cases_answers["input_arrays"][i], test_cases_answers["input_targets"][i])
     # doing number 5
         if result != test_cases_answers["answers"][i]:
             passed = False
