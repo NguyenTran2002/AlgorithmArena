@@ -2,10 +2,8 @@ import json
 from flask import Flask, request, jsonify, Response
 import os
 import requests
-# from binary_search_test import Solution
-# import save_string_as_py
 from user_binary_search import Solution
-from exec_str import run_method_from_string
+from exec_class import run_method_from_string
 
 """
 This function imports a .py file that has the user written program, runs it, and returns whether the program
@@ -26,9 +24,8 @@ def evaluate():
         "user_code" : user code that is in str format
         "problem" : name of problem ex. binary search (need to check if it's like binary search or binarySearch)
     2. get the corresponding test cases (input arr, input num, etc) and answers from database
-    3. take the user_code str and run save_string_as_py func
-    4. run the .py code function and run it using test cases you got from the database
-    5. depending on whether it matches the answers from database json obj, return a json obj:
+    3. run the .py code function and run it using test cases you got from the database
+    4. depending on whether it matches the answers from database json obj, return a json obj:
         "result" : either you didn't pass all test cases or congratulations you did
     """
 
@@ -43,8 +40,7 @@ def evaluate():
     try:
 
         problem_name = {
-            # "problem": data_dict["problem"]
-            "problem" : "binary_search"
+            "problem": data_dict["problem"]
         }
 
         data = requests.post(database_url, json=problem_name)
@@ -52,22 +48,14 @@ def evaluate():
 
     except Exception as e:
         message = f"Error2 eval: {str(e)}"
-    
+
     # doing number 3
-    # DO NOT REMOVE THE FOLLOWING PRINT STATEMENT UNDER ANY CIRCUMSTANCE (Nguyen)
-    # print("Success in saving input string as Python file:\n",\
-    #     save_string_as_py.save_string_as_python_file("user_binary_search.py", data_dict["user_code"]))
-
-    # from user_binary_search import Solution
-
-    # doing number 4 (assuming import works with save_string_as_py file)
     my_solution = Solution()
     passed = True
     arr_length = len(test_cases_answers["input_arrays"])
     for i in range(arr_length):
-        # result = my_solution.binary_search(test_cases_answers["input_arrays"][i], test_cases_answers["input_targets"][i])
-        result = run_method_from_string(data_dict["user_code"], "binary_search", test_cases_answers["input_arrays"][i], test_cases_answers["input_targets"][i])
-    # doing number 5
+        result = run_method_from_string(data_dict["user_code"], "Solution", "binary_search", [test_cases_answers["input_arrays"][i], test_cases_answers["input_targets"][i]])
+    # doing number 4
         if result != test_cases_answers["answers"][i]:
             passed = False
             result = {
