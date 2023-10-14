@@ -2,7 +2,6 @@ import json
 from flask import Flask, request, jsonify, Response
 import os
 import requests
-from user_binary_search import Solution
 from exec_class import run_method_from_string
 
 """
@@ -38,7 +37,6 @@ def evaluate():
 
     # doing number 2
     try:
-
         problem_name = {
             "problem": data_dict["problem"]
         }
@@ -50,16 +48,16 @@ def evaluate():
         message = f"Error2 eval: {str(e)}"
 
     # doing number 3
-    my_solution = Solution()
     passed = True
     arr_length = len(test_cases_answers["input_arrays"])
     for i in range(arr_length):
         result = run_method_from_string(data_dict["user_code"], "Solution", "binary_search", [test_cases_answers["input_arrays"][i], test_cases_answers["input_targets"][i]])
     # doing number 4
-        if result != test_cases_answers["answers"][i]:
+        answer = test_cases_answers["answers"][i]
+        if result != answer:
             passed = False
             result = {
-                "result" : "You did not pass all the test cases :("
+                "result" : f"You did not pass all the test cases :(. You messed up on test case number {i+1} the actual answer was: {answer}"
             }
             break
     if passed:
