@@ -39,7 +39,7 @@ def get_test_cases():
             if test_suite is None:
                 return jsonify({'Error 2 Database': 'Cannot find the problem in the database'}), 500
 
-            return json.dumps(test_suite)
+            return jsonify(test_suite)
             
     except Exception as e:
 
