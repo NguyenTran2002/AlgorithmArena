@@ -1,6 +1,6 @@
 class Solution:
     
-    def containsDuplicate(self, nums: list[int]) -> bool:
+    def contains_duplicate(self, nums: list[int]) -> bool:
         
         nums_set = set()
 

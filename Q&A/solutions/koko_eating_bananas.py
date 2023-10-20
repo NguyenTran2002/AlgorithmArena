@@ -1,6 +1,6 @@
 class Solution:
 
-    def minEatingSpeed(self, piles: list[int], h: int) -> int:
+    def koko_eating_bananas(self, piles: list[int], h: int) -> int:
         
         left = 1
         right = max(piles)

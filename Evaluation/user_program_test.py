@@ -8,8 +8,6 @@ from exec_class import run_method_from_string
 This function imports a .py file that has the user written program, runs it, and returns whether the program
 passed all test cases, or if not returns the test case that it failed on in a json object.
 """
-folder_path = "QnA/test_cases_and_answers"
-file_name = "binary_search.json"
 
 main_url = 'http://main:2727'
 database_url = 'http://database:7432/get_test_cases'
@@ -49,15 +47,44 @@ def evaluate():
 
     # doing number 3
     passed = True
-    arr_length = len(test_cases_answers["input_arrays"])
-    for i in range(arr_length):
-        result = run_method_from_string(data_dict["user_code"], "Solution", "binary_search", [test_cases_answers["input_arrays"][i], test_cases_answers["input_targets"][i]])
+    params = []
+    num_testcases = len(test_cases_answers[test_cases_answers["inputs"][0]])
+    for param in test_cases_answers["inputs"]:
+        for key in test_cases_answers:
+            if key == param:
+                params.append(test_cases_answers[key])
+    for i in range(num_testcases): # may want to find a better way to pass params than hard-coded if statements
+        if len(params) == 1:
+            sol_result = run_method_from_string(data_dict["user_code"],
+                "Solution",
+                test_cases_answers["problem_name"],
+                [params[0][i]])
+        elif len(params) == 2:
+            sol_result = run_method_from_string(data_dict["user_code"],
+                "Solution",
+                test_cases_answers["problem_name"],
+                [params[0][i], params[1][i]])
+        elif len(params) == 3:
+            sol_result = run_method_from_string(data_dict["user_code"],
+                "Solution", test_cases_answers["problem_name"],
+                [params[0][i], params[1][i], params[2][i]])
+        elif len(params) == 4:
+            sol_result = run_method_from_string(data_dict["user_code"], 
+                "Solution", test_cases_answers["problem_name"], 
+                [params[0][i], params[1][i], params[2][i], params[3][i]])
+        elif len(params) == 5:
+            sol_result = run_method_from_string(data_dict["user_code"],
+                "Solution", test_cases_answers["problem_name"],
+                [params[0][i], params[1][i], params[2][i], params[3][i], params[4][i]])
+        else:
+            sol_result = "Error: More than 5 parameters"
+    
     # doing number 4
         answer = test_cases_answers["answers"][i]
-        if result != answer:
+        if sol_result != answer:
             passed = False
             result = {
-                "result" : f"You did not pass all the test cases :(. You messed up on test case number {i+1} the actual answer was: {answer}"
+                "result" : f"You did not pass all the test cases :(. You messed up on test case number {i+1}. Your answer was: {sol_result}, but the actual answer was: {answer}"
             }
             break
     if passed:
