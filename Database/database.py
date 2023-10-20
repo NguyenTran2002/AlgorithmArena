@@ -10,10 +10,15 @@ from helper import *
 
 app = Flask(__name__)
 
-@app.route('/', methods=['POST'])
+client = connect_to_mongo()
+all_problems = set()
+
+@app.route('/get_test_cases', methods=['POST'])
 def get_test_cases():
 
-    print("Received a request")
+    global client
+
+    print("Received a request to retrieve test cases")
 
     try:
         
@@ -28,7 +33,6 @@ def get_test_cases():
 
             problem = data['problem']
 
-            client = connect_to_mongo()
             collection = get_collection(
                 client = client,
                 database_name = 'qa-repo',
@@ -49,12 +53,25 @@ def get_test_cases():
         return jsonify({'Error 3 Database': "Didn't receive any json."}), 500
     
 
-def load_user_password():
-    """
-    Load the username and password from the .env file
-    """
-    load_dotenv()
-    return os.getenv('username'), os.getenv('password')
+@app.route('/get_all_problems', methods=['POST'])
+def get_all_problems():
+
+    global client
+    global all_problems
+
+    if len(all_problems) == 0:
+
+        collection = get_collection(client = client,
+            database_name = 'qa-repo',
+            collection_name = 'qa')
+        
+        for problem in collection.find():
+            all_problems.add(problem['problem_name'])
+
+    # prepare the data into json
+    data = {'problems' : list(all_problems)}
+
+    return jsonify(data)
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", debug=True, port = 7432)

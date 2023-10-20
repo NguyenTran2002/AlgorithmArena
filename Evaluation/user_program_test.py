@@ -12,7 +12,7 @@ folder_path = "QnA/test_cases_and_answers"
 file_name = "binary_search.json"
 
 main_url = 'http://main:2727'
-database_url = 'http://database:7432'
+database_url = 'http://database:7432/get_test_cases'
 
 app = Flask(__name__)
 
@@ -65,8 +65,6 @@ def evaluate():
             "result" : "You passed all the test cases, congrats!"
         }
     return jsonify(result)
-
-
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", debug=True, port = 1111)

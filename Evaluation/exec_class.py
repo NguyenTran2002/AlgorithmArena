@@ -14,7 +14,6 @@ def run_method_from_string(code_string, class_name, method_name, params):
             # Call the specified method and return its result
             method = getattr(instance, method_name)
             result = method(*params)
-            print(result)
             return result
         else:
             return f"Class '{class_name}' or method '{method_name}' not found in the code."
