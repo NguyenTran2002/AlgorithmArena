@@ -9,7 +9,7 @@ def load_user_password():
     Load the username and password from the .env file
     """
     load_dotenv()
-    return os.getenv('username'), os.getenv('password]')
+    return os.getenv('username'), os.getenv('password')
 
 def connect_to_mongo():
     """
