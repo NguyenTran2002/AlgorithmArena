@@ -6,13 +6,20 @@
 </head>
 
 <body>
-    <div>{{ problem|safe }}</div>
 
-    <h2>Submit Your Code:</h2>
-    <form method="POST">
-        <textarea name="user_code" rows="20" cols="100" required></textarea><br>
-        <input type="submit" value="Submit">
-    </form>
+    <div>
+        <form method="POST" id="problemForm">
+            <select name="problem">
+                {% for p in problems %}
+                    <option value="{{ p }}">{{ p }}</option>
+                {% endfor %}
+            </select>
+            <br><br>
+            <h2>Submit Your Code:</h2>
+            <textarea name="user_code" rows="20" cols="100" required></textarea><br>
+            <input type="submit" value="Submit">
+        </form>
+    </div>
 
 </body>
 </html>
