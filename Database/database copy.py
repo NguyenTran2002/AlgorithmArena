@@ -6,8 +6,6 @@ import json
 
 from flask import Flask, jsonify, request
 
-from helper import *
-
 app = Flask(__name__)
 
 @app.route('/', methods=['POST'])
@@ -30,11 +28,10 @@ def get_test_cases():
 
             problem = data['problem']
 
-            client = connect_to_mongo()
-            collection = get_collection(
-                client = client,
-                database_name = 'qa-repo',
-                collection_name = 'qa')
+            uri = "mongodb+srv://" + username + ":" + password + "@main.3vgxubm.mongodb.net/?retryWrites=true&w=majority"
+            client = MongoClient(uri, server_api=ServerApi('1'))
+            db = client['qa-repo']
+            collection = db['qa']
 
             test_suite = collection.find_one({"problem_name": problem})
             del test_suite["_id"] # this is needed because the _id field is not json serializable
