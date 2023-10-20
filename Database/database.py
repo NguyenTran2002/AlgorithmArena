@@ -15,8 +15,6 @@ def get_test_cases():
 
     print("Received a request")
 
-    username, password = load_user_password()
-
     try:
         
         data = request.get_json()
