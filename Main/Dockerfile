@@ -37,6 +37,8 @@ COPY . .
 # into this layer.
 RUN pip install --upgrade pip
 RUN python -m pip install -r requirements.txt
+RUN mkdir /session
+RUN chmod 777 /session
 
 # Switch to the non-privileged user to run the application.
 USER appuser
