@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Algorithm Arena</title>
+    <title>Code Evaluation Result</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -11,26 +11,22 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
-            margin: 0px;
+            margin: 0;
         }
 
         .container {
-            height: 100vh;
-            width: 100vh;
+            width: 70%;
             background-color: #fff;
-            padding: 25%;
+            padding: 20px;
             border-radius: 5px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
-        textarea {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 20px;
-            border-radius: 5px;
+        h1, h2, p {
+            text-align: center;
         }
 
-        input[type="submit"] {
+        button {
             padding: 10px 20px;
             background-color: #4CAF50;
             color: white;
@@ -38,9 +34,10 @@
             border-radius: 5px;
             cursor: pointer;
             font-size: 16px;
+            margin-top: 20px;
         }
 
-        input[type="submit"]:hover {
+        button:hover {
             background-color: #45a049;
         }
     </style>
@@ -49,11 +46,16 @@
 <body>
 
     <div class="container">
-        <div>{{ problem_markdown|safe }}</div>
-        <h1>Submit Your Code:</h1>
-        <form method="POST">
-            <textarea name="user_code" rows="20" cols="100" required></textarea><br>
-            <input type="submit" value="Submit">
+        <h1>Code Evaluation Result</h1>
+        <h2>SUCCESS!</h2>
+        <div>
+            {% for sentence in message.split("\n") %}
+                <p>{{ sentence }}</p>
+            {% endfor %}
+        </div>
+        <!-- Button to go back to the home page -->
+        <form action="/" method="get">
+            <button type="submit">Solve More Problems</button>
         </form>
     </div>
 
