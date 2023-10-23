@@ -67,14 +67,14 @@ def evaluate():
         if sol_result != answer:
             passed = False
             result = {
-                "result" : f"You did not pass all the test cases 😭😭 You messed up on test case number {i+1}. Your answer was: {sol_result}, but the actual answer was: {answer}",
+                "result" : f"You did not pass all the test cases 😭😭\nYou messed up on test case number {i+1}.\nYour answer was: {sol_result}.\nThe actual answer is: {answer}.",
                 "success" : False
             }
             break
     average_time_mil = average_time / num_testcases * 1000
     if passed:
         result = {
-            "result" : f"You passed all the test cases, congrats! 🎉🎉🎉 Yay! Your program took {average_time_mil:.2f} milliseconds to run on average for every test case.",
+            "result" : f"You passed all the test cases, congrats! 🎉🎉🎉\nYour program took {average_time_mil:.2f} milliseconds to run on average for every test case.",
             "success" : True
         }
     return jsonify(result)

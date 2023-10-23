@@ -3,6 +3,8 @@ from flask_session import Session
 import markdown
 import requests
 
+from helper import *
+
 app = Flask(__name__)
 app.config["SESSION_PERMANENT"] = False
 app.config["SECRET_KEY"] = 'Unicorn Rainbow Eating Ice Cream Cone'
@@ -15,6 +17,10 @@ problems = []  # List of all available problems
 # Define the path to the Markdown problem file
 evaluation_service_url = 'http://evaluation:1111'  # Replace with the actual URL of the evaluation microservice
 database_url = 'http://database:7432'
+
+print("\n\n\n\n_____________________________\n")
+print("Access the application at\nhttp://localhost:2727")
+print("_____________________________\n\n\n\n")
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -67,12 +73,17 @@ def solve():
             response = requests.post(evaluation_service_url, json = data)
             response_data = response.json()
             message = response_data["result"]
+            success = bool(response_data["success"])
 
         except Exception as e:
             message = f"Error 2 main: {str(e)}"
             print(message)
         
-        return render_template('result.html', problem = selected_problem_html, message = message)
+        if success == True:
+            return render_template('result_success.html', problem = selected_problem_html, message = message)
+        
+        else:
+            return render_template('result_failure.html', problem = selected_problem_html, message = message)
     
     return render_template(
         'solve.html',

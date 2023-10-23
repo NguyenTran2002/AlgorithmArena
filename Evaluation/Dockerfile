@@ -45,4 +45,4 @@ USER appuser
 EXPOSE 1111
 
 # Run the application.
-CMD python3 user_program_test.py
+CMD python3 evaluation.py
