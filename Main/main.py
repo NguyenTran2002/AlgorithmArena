@@ -3,6 +3,8 @@ from flask_session import Session
 import markdown
 import requests
 
+from helper import *
+
 app = Flask(__name__)
 app.config["SESSION_PERMANENT"] = False
 app.config["SECRET_KEY"] = 'Unicorn Rainbow Eating Ice Cream Cone'
@@ -15,6 +17,10 @@ problems = []  # List of all available problems
 # Define the path to the Markdown problem file
 evaluation_service_url = 'http://evaluation:1111'  # Replace with the actual URL of the evaluation microservice
 database_url = 'http://database:7432'
+
+print("\n\n\n\n_____________________________\n")
+print("Access the application at\nhttp://localhost:2727")
+print("_____________________________\n\n\n\n")
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
