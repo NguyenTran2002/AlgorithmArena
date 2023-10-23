@@ -22,3 +22,8 @@ Given an integer array nums, return true if any value appears at least twice in 
 
     1 <= nums.length <= 105
     -109 <= nums[i] <= 109
+
+# Starter Code
+Each indent is four spaces!<br>
+<br>`class Solution:`<br>
+&nbsp;&nbsp;&nbsp;&nbsp;`def contains_duplicate(self, nums: list[int]) -> bool:`
