@@ -47,9 +47,12 @@
 
     <div class="container">
         <h1>Code Evaluation Result</h1>
-        <h2>Submission Result</h2>
-        <p>{{ message }}</p>
-
+        <h2>Oh no...</h2>
+        <div>
+            {% for sentence in message.split("\n") %}
+                <p>{{ sentence }}</p>
+            {% endfor %}
+        </div>
         <!-- Button to go back to the home page -->
         <form action="/" method="get">
             <button type="submit">Solve More Problems</button>

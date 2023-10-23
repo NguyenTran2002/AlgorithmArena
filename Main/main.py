@@ -73,12 +73,17 @@ def solve():
             response = requests.post(evaluation_service_url, json = data)
             response_data = response.json()
             message = response_data["result"]
+            success = bool(response_data["success"])
 
         except Exception as e:
             message = f"Error 2 main: {str(e)}"
             print(message)
         
-        return render_template('result.html', problem = selected_problem_html, message = message)
+        if success == True:
+            return render_template('result_success.html', problem = selected_problem_html, message = message)
+        
+        else:
+            return render_template('result_failure.html', problem = selected_problem_html, message = message)
     
     return render_template(
         'solve.html',
