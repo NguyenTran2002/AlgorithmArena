@@ -3,6 +3,7 @@ from flask import Flask, request, jsonify, Response
 import os
 import requests
 from exec_class import run_method_from_string
+import time
 
 """
 This function imports a .py file that has the user written program, runs it, and returns whether the program
@@ -48,48 +49,33 @@ def evaluate():
     # doing number 3
     passed = True
     params = []
+    average_time = 0
     num_testcases = len(test_cases_answers[test_cases_answers["inputs"][0]])
     for param in test_cases_answers["inputs"]:
         for key in test_cases_answers:
             if key == param:
                 params.append(test_cases_answers[key])
-    for i in range(num_testcases): # may want to find a better way to pass params than hard-coded if statements
-        if len(params) == 1:
-            sol_result = run_method_from_string(data_dict["user_code"],
-                "Solution",
-                test_cases_answers["problem_name"],
-                [params[0][i]])
-        elif len(params) == 2:
-            sol_result = run_method_from_string(data_dict["user_code"],
-                "Solution",
-                test_cases_answers["problem_name"],
-                [params[0][i], params[1][i]])
-        elif len(params) == 3:
-            sol_result = run_method_from_string(data_dict["user_code"],
-                "Solution", test_cases_answers["problem_name"],
-                [params[0][i], params[1][i], params[2][i]])
-        elif len(params) == 4:
-            sol_result = run_method_from_string(data_dict["user_code"], 
-                "Solution", test_cases_answers["problem_name"], 
-                [params[0][i], params[1][i], params[2][i], params[3][i]])
-        elif len(params) == 5:
-            sol_result = run_method_from_string(data_dict["user_code"],
-                "Solution", test_cases_answers["problem_name"],
-                [params[0][i], params[1][i], params[2][i], params[3][i], params[4][i]])
-        else:
-            sol_result = "Error: More than 5 parameters"
+    for i in range(num_testcases): 
+        start_time = time.time()
+        sol_result = run_method_from_string(data_dict["user_code"], "Solution", test_cases_answers["problem_name"], [param[i] for param in params])
+        end_time = time.time()
+        exec_time = end_time - start_time
+        average_time += exec_time
     
     # doing number 4
         answer = test_cases_answers["answers"][i]
         if sol_result != answer:
             passed = False
             result = {
-                "result" : f"You did not pass all the test cases :(. You messed up on test case number {i+1}. Your answer was: {sol_result}, but the actual answer was: {answer}"
+                "result" : f"You did not pass all the test cases 😭😭 You messed up on test case number {i+1}. Your answer was: {sol_result}, but the actual answer was: {answer}",
+                "success" : False
             }
             break
+    average_time_mil = average_time / num_testcases * 1000
     if passed:
         result = {
-            "result" : "You passed all the test cases, congrats!"
+            "result" : f"You passed all the test cases, congrats! 🎉🎉🎉 Yay! Your program took {average_time_mil:.2f} milliseconds to run on average for every test case.",
+            "success" : True
         }
     return jsonify(result)
 
