@@ -13,7 +13,7 @@ def load_aws_connection_properties():
     from the .env file
     """
     load_dotenv()
-    return os.getenv('aws_host'), os.getenv('aws_port'), os.getenv('aws_user'), os.getenv('aws_password'), os.getenv('aws_database')
+    return os.getenv('aws_host'), int(os.getenv('aws_port')), os.getenv('aws_user'), os.getenv('aws_password'), os.getenv('aws_database')
 
 def connect_to_aws(host, port, user, password, database):
     # Connect to the database
@@ -27,6 +27,12 @@ def connect_to_aws(host, port, user, password, database):
     return connection, cursor
 
 def create_table(connection, cursor, table_name, columns, data_types):
+    """
+    INPUT SIGNATURE:
+        table_name: string
+        columns: a list of strings (each is a column name)
+        data_types: a list of strings containing datatype corresponding to the columns
+    """
 
     try:
 
@@ -40,6 +46,8 @@ def create_table(connection, cursor, table_name, columns, data_types):
 
         query = query.rstrip(", ") + ")"
 
+        print(query)
+
         cursor.execute(query)
 
         connection.commit()
@@ -50,6 +58,10 @@ def create_table(connection, cursor, table_name, columns, data_types):
         print(f"An error occurred: {e}")
 
 def delete_table(connection, cursor, table_name):
+    """
+    INPUT SIGNATURE:
+        table_name: string
+    """
     
     try:
         cursor.execute(f"DROP TABLE IF EXISTS {table_name};")
@@ -60,6 +72,10 @@ def delete_table(connection, cursor, table_name):
         print(f"An error occurred: {e}")
 
 def get_column_names(cursor, table_name):
+    """
+    INPUT SIGNATURE:
+        table_name: string
+    """
 
     try:
         cursor.execute(f"DESCRIBE {table_name}")
@@ -70,7 +86,28 @@ def get_column_names(cursor, table_name):
     except Exception as e:
         print(f"An error occurred: {e}")
 
+def get_column_data_types(cursor, table_name):
+    """
+    DESCRIPTION:
+        Given a table name, return the data types of the columns in the table.
+    """
+
+    try:
+        cursor.execute(f"DESCRIBE {table_name}")
+        columns = cursor.fetchall()
+        column_data_types = [column[1] for column in columns]
+        return column_data_types
+    
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
 def add_entry_to_table(connection, cursor, table_name, entry_list):
+    """
+    INPUT SIGNATURE:
+        table_name: string
+        entry_list: a list of values to be inserted into the table,
+            corresponding to the columns
+    """
 
     try:
 
@@ -103,6 +140,12 @@ def retrieve_all_rows(cursor, table_name):
         print(f"An error occurred: {e}")
 
 def get_column2_given_column1(cursor, table_name, column_1, column_2, column_1_val):
+    """
+    DESCRIPTION:
+        Given a specific value of column_1,
+            find the row with that specific value at column_1,
+            then return the value of column_2 in that row.
+    """
 
     try:
 
