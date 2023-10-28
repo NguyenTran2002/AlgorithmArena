@@ -3,6 +3,10 @@ from pymongo.server_api import ServerApi
 from dotenv import load_dotenv
 import os
 import json
+from flask_cors import CORS
+import collections
+import collections.abc
+collections.Iterable = collections.abc.Iterable
 
 from flask import Flask, jsonify, request
 
@@ -10,6 +14,7 @@ from mongo_helper import *
 from aws_sql_helper import *
 
 app = Flask(__name__)
+CORS(app)
 
 client = connect_to_mongo()
 
