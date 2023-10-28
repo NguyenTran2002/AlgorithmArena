@@ -12,15 +12,29 @@ services:
     build: ./Main
     ports:
       - "2727:2727"
+    networks: 
+      - mynetwork
   evaluation:
     build: ./Evaluation
-    expose:
-      - "1111"
+    ports:
+      - "1111:1111"
+    networks: 
+      - mynetwork
   database:
     build: ./Database
-    expose:
-      - "7432"
+    ports:
+      - "7432:7432"
+    networks: 
+      - mynetwork
+  react-app:
+    build: ./react-app
+    ports:
+      - "8080:8080"
+    networks: 
+      - mynetwork
 
+networks:
+  mynetwork:
 
 # The commented out section below is an example of how to define a PostgreSQL
 # database that your application can use. `depends_on` tells Docker Compose to

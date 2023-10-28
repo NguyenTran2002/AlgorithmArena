@@ -3,6 +3,10 @@ from pymongo.server_api import ServerApi
 from dotenv import load_dotenv
 import os
 import json
+from flask_cors import CORS
+import collections
+import collections.abc
+collections.Iterable = collections.abc.Iterable
 
 from flask import Flask, jsonify, request
 
@@ -10,12 +14,13 @@ from mongo_helper import *
 from aws_sql_helper import *
 
 app = Flask(__name__)
+CORS(app)
 
 client = connect_to_mongo()
 
-aws_host, aws_port, aws_user, aws_password, aws_database = load_aws_connection_properties()
-aws_connection = connect_to_aws(aws_host, aws_port, aws_user, aws_password, aws_database)
-aws_cursor = aws_connection.cursor()
+# aws_host, aws_port, aws_user, aws_password, aws_database = load_aws_connection_properties()
+# aws_connection = connect_to_aws(aws_host, aws_port, aws_user, aws_password, aws_database)
+# aws_cursor = aws_connection.cursor()
 
 all_problems = set()
 
@@ -80,48 +85,48 @@ def get_all_problems():
     return jsonify(data)
 
 
-@app.route('/authenticate', methods=['POST'])
-def authenticate():
+# @app.route('/authenticate', methods=['POST'])
+# def authenticate():
 
-    global aws_connection
-    global aws_cursor
+#     global aws_connection
+#     global aws_cursor
 
-    try:
+#     try:
 
-        data = request.get_json()
+#         data = request.get_json()
 
-        # Check if problem is given in post request
-        if 'username' not in data or 'password' not in data:
-            print("Error 1 Database: Missing 'username' or 'password' in the request data")
-            return jsonify({'Error 1 Database': 'Missing "username" or "password" in the request data'}), 400
+#         # Check if problem is given in post request
+#         if 'username' not in data or 'password' not in data:
+#             print("Error 1 Database: Missing 'username' or 'password' in the request data")
+#             return jsonify({'Error 1 Database': 'Missing "username" or "password" in the request data'}), 400
         
-        else:
+#         else:
 
-            username = data['username']
-            password = data['password']
+#             username = data['username']
+#             password = data['password']
 
-            # get the correct password from the database
-            correct_password = get_column2_given_column1(
-                aws_cursor,
-                "user_logins",
-                "username",
-                "password",
-                username)
+#             # get the correct password from the database
+#             correct_password = get_column2_given_column1(
+#                 aws_cursor,
+#                 "user_logins",
+#                 "username",
+#                 "password",
+#                 username)
 
-            if correct_password is None:
-                return jsonify({'authentication_result' : "Username Doesn't Exist"}), 500
+#             if correct_password is None:
+#                 return jsonify({'authentication_result' : "Username Doesn't Exist"}), 500
         
-            if correct_password != password:
-                return jsonify({'authentication_result' : 'Incorrect Password'}), 500
+#             if correct_password != password:
+#                 return jsonify({'authentication_result' : 'Incorrect Password'}), 500
 
-            else:
-                return jsonify({'authentication_result' : 'Success'})
+#             else:
+#                 return jsonify({'authentication_result' : 'Success'})
             
-    except Exception as e:
+#     except Exception as e:
 
-        print("ENCOUNTERED THE FOLLOWING EXCEPTION:\n", e)
+#         print("ENCOUNTERED THE FOLLOWING EXCEPTION:\n", e)
 
-        return jsonify({'Error 1 Database': "Didn't receive any json."}), 500
+#         return jsonify({'Error 1 Database': "Didn't receive any json."}), 500
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", debug=True, port = 7432)
