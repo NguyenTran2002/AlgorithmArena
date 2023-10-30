@@ -19,8 +19,7 @@ CORS(app)
 client = connect_to_mongo()
 
 aws_host, aws_port, aws_user, aws_password, aws_database = load_aws_connection_properties()
-aws_connection = connect_to_aws(aws_host, aws_port, aws_user, aws_password, aws_database)
-aws_cursor = aws_connection.cursor()
+aws_connection, aws_cursor = connect_to_aws(aws_host, aws_port, aws_user, aws_password, aws_database)
 
 all_problems = set()
 
