@@ -4,7 +4,7 @@
 # If you need more help, visit the Dockerfile reference guide at
 # https://docs.docker.com/engine/reference/builder/
 
-ARG PYTHON_VERSION=3.12.0
+ARG PYTHON_VERSION=3.11.4
 FROM python:${PYTHON_VERSION}-slim as base
 
 # Prevents Python from writing pyc files.
@@ -37,12 +37,14 @@ COPY . .
 # into this layer.
 RUN pip install --upgrade pip
 RUN python -m pip install -r requirements.txt
+RUN mkdir /session
+RUN chmod 777 /session
 
 # Switch to the non-privileged user to run the application.
 USER appuser
 
 # Expose the port that the application listens on.
-EXPOSE 7432
+EXPOSE 2828
 
 # Run the application.
-CMD python3 database.py
+CMD python3 console.py
