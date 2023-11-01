@@ -132,8 +132,6 @@ def retrieve_all_rows(cursor, table_name):
     try:
         cursor.execute(f"SELECT * FROM {table_name}")
         rows = cursor.fetchall()
-        for row in rows:
-            print(row)
         return rows
     
     except Exception as e:
@@ -157,5 +155,16 @@ def get_column2_given_column1(cursor, table_name, column_1, column_2, column_1_v
         else:
             return None
         
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
+def get_table_names(cursor):
+
+    try:
+        cursor.execute("SHOW TABLES")
+        tables = cursor.fetchall()
+        table_names = [table[0] for table in tables]
+        return table_names
+    
     except Exception as e:
         print(f"An error occurred: {e}")

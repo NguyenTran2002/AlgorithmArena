@@ -1,0 +1,5 @@
+aws_host=algorithm-arena-data.cwyl09slg4ph.us-east-2.rds.amazonaws.com
+aws_port=3306
+aws_user=koala
+aws_password=koala
+aws_database=algorithm_arena

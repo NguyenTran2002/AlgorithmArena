@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Entry</title>
+</head>
+<body>
+    <h1>Add Entry to {{ session['selected_table'] }}</h1>
+    <form action="/add_entry" method="post">
+        {% for i in range(len(columns_names)) %}
+            <label for="{{ columns_names[i] }}">{{ columns_names[i] }} ({{ data_types[i] }}):</label><br>
+            <input type="text" id="{{ columns_names[i] }}" name="{{ columns_names[i] }}"><br><br>
+        {% endfor %}
+        <input type="submit" value="Submit">
+    </form>
+</body>
+</html>

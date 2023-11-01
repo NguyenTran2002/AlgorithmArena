@@ -54,6 +54,27 @@ def table():
         
         except Exception as e:
             return f"An error occurred: {e}"
+        
+@app.route('/add_entry', methods=['GET', 'POST'])
+def add_entry():
+
+    if request.method == 'GET':
+
+        try:
+            columns_names = get_column_names(cursor, session['selected_table'])
+            data_types = get_column_data_types(cursor, session['selected_table'])
+            return render_template('add_entry.html', columns_names=columns_names, data_types=data_types)
+        except Exception as e:
+            return f"An error occurred: {e}"
+        
+    elif request.method == 'POST':
+        entry_list = [request.form.get(column) for column in request.form]
+        try:
+            add_entry_to_table(connection, cursor, session['selected_table'], entry_list)
+            return "Entry added successfully."
+        except Exception as e:
+            return f"An error occurred: {e}"
+
 
 if __name__ == '__main__':
-    app.run(debug=True, port=2828)
+    app.run(host="0.0.0.0", port=2828)
