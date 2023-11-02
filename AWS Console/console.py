@@ -58,22 +58,29 @@ def table():
 @app.route('/add_entry', methods=['GET', 'POST'])
 def add_entry():
 
+    # Triggered when the user clicks the "Add Entry" button
     if request.method == 'GET':
 
         try:
             columns_names = get_column_names(cursor, session['selected_table'])
             data_types = get_column_data_types(cursor, session['selected_table'])
-            return render_template('add_entry.html', columns_names=columns_names, data_types=data_types)
-        except Exception as e:
-            return f"An error occurred: {e}"
+            return render_template('add_entry.html', columns_names=columns_names, data_types=data_types, error_message=None)
         
-    elif request.method == 'POST':
-        entry_list = [request.form.get(column) for column in request.form]
-        try:
-            add_entry_to_table(connection, cursor, session['selected_table'], entry_list)
-            return "Entry added successfully."
         except Exception as e:
-            return f"An error occurred: {e}"
+            return render_template('error.html', error=f"An error occurred: {e}")
+
+    # Triggered when the user filled out the form and clicked the "Submit" button
+    elif request.method == 'POST':
+
+        try:
+            columns_names = get_column_names(cursor, session['selected_table'])
+            data_types = get_column_data_types(cursor, session['selected_table'])
+            entry_list = [request.form[column] for column in columns_names]
+            add_entry_to_table(connection, cursor, session['selected_table'], entry_list)
+            return render_template('success.html', message="Entry added successfully.")
+        
+        except Exception as e:
+            return render_template('error.html', error=f"An error occurred: {e}")
 
 
 if __name__ == '__main__':

@@ -2,13 +2,78 @@
 <html>
 <head>
     <title>Add Entry</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        h1 {
+            color: #333;
+        }
+        .home-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+        form {
+            margin-top: 20px;
+        }
+        label {
+            color: #666;
+        }
+        input[type=text] {
+            padding: 10px;
+            margin-bottom: 15px;
+            width: 30%;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+        input[type=submit] {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .home-button {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .action-button {
+            display: inline-block;
+            margin: 10px;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
+    <a class="home-button" href="/">Home</a>
     <h1>Add Entry to {{ session['selected_table'] }}</h1>
     <form action="/add_entry" method="post">
-        {% for i in range(len(columns_names)) %}
+        {% for i in range(columns_names|length) %}
             <label for="{{ columns_names[i] }}">{{ columns_names[i] }} ({{ data_types[i] }}):</label><br>
-            <input type="text" id="{{ columns_names[i] }}" name="{{ columns_names[i] }}"><br><br>
+            <input type="text" id="{{ columns_names[i] }}" name="{{ columns_names[i] }}"><br>
         {% endfor %}
         <input type="submit" value="Submit">
     </form>
