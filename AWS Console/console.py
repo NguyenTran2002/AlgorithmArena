@@ -82,6 +82,50 @@ def add_entry():
         except Exception as e:
             return render_template('error.html', error=f"An error occurred: {e}")
 
+@app.route('/add_column', methods=['GET', 'POST'])
+def add_column_flask():
+
+    if request.method == 'GET':
+
+        try:
+            return render_template('add_column.html', error_message=None)
+
+        except Exception as e:
+            return render_template('error.html', error=f"An error occurred: {e}")
+
+    elif request.method == 'POST':
+
+        try:
+            column_name = request.form['column_name']
+            data_type = request.form['data_type']
+            add_column(connection, cursor, session['selected_table'], column_name, data_type)
+            return render_template('success.html', message="Column added successfully.")
+
+        except Exception as e:
+            return render_template('error.html', error=f"An error occurred: {e}")
+        
+@app.route('/remove_column', methods=['GET', 'POST'])
+def remove_column_flask():
+
+    if request.method == 'GET':
+
+        try:
+            table_name = session['selected_table']
+            columns_names = get_column_names(cursor, table_name)
+            return render_template('remove_column.html', columns_names=columns_names, error_message=None)
+        
+        except Exception as e:
+            return render_template('error.html', error=f"An error occurred: {e}")
+
+    elif request.method == 'POST':
+        try:
+            table_name = session['selected_table']
+            column_name = request.form['selected_column']
+            remove_column(connection, cursor, table_name, column_name)
+            return render_template('success.html', message=f"Column '{column_name}' removed successfully from the table '{table_name}'.")
+        except Exception as e:
+            return render_template('error.html', error=f"An error occurred: {e}")
+
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=2828)

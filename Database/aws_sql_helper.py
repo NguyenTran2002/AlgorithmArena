@@ -168,3 +168,25 @@ def get_table_names(cursor):
     
     except Exception as e:
         print(f"An error occurred: {e}")
+
+def add_column(connection, cursor, table_name, column_name, data_type):
+
+    try:
+        query = f"ALTER TABLE {table_name} ADD {column_name} {data_type}"
+        cursor.execute(query)
+        connection.commit()
+        print(f"Column '{column_name}' added successfully to the table '{table_name}'.")
+
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
+def remove_column(connection, cursor, table_name, column_name):
+
+    try:
+        query = f"ALTER TABLE {table_name} DROP COLUMN {column_name}"
+        cursor.execute(query)
+        connection.commit()
+        print(f"Column '{column_name}' removed successfully from the table '{table_name}'.")
+        
+    except Exception as e:
+        print(f"An error occurred: {e}")
