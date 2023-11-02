@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Add Entry</title>
+    <title>Add Column</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -11,7 +11,8 @@
             color: #333;
         }
         .table-button {
-            display: inline-block;
+            display: block;
+            margin: 20px auto;
             padding: 10px 20px;
             background-color: #4CAF50;
             color: white;
@@ -19,7 +20,6 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            margin-bottom: 20px;
         }
         form {
             margin-top: 20px;
@@ -43,39 +43,17 @@
             border-radius: 5px;
             cursor: pointer;
         }
-        .table-button {
-            display: block;
-            margin: 20px auto;
-            padding: 10px 20px;
-            background-color: #4CAF50;
-            color: white;
-            text-decoration: none;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .action-button {
-            display: inline-block;
-            margin: 10px;
-            padding: 10px 20px;
-            background-color: #4CAF50;
-            color: white;
-            text-decoration: none;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
     </style>
 </head>
 <body>
     <a class="table-button" href="/table?selected_table={{ session['selected_table'] }}">Back to Table</a>
-    <h1>Add Entry to {{ session['selected_table'] }}</h1>
-    <form action="/add_entry" method="post">
-        {% for i in range(columns_names|length) %}
-            <label for="{{ columns_names[i] }}">{{ columns_names[i] }} ({{ data_types[i] }}):</label><br>
-            <input type="text" id="{{ columns_names[i] }}" name="{{ columns_names[i] }}"><br>
-        {% endfor %}
-        <input type="submit" value="Submit">
+    <h1>Add Column to {{ session['selected_table'] }}</h1>
+    <form action="/add_column" method="post">
+        <label for="column_name">Column Name:</label><br>
+        <input type="text" id="column_name" name="column_name"><br>
+        <label for="data_type">Data Type:</label><br>
+        <input type="text" id="data_type" name="data_type"><br>
+        <input type="submit" value="Add Column">
     </form>
 </body>
 </html>
