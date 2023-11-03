@@ -114,6 +114,27 @@ def get_column_data_types(cursor, table_name):
     except Exception as e:
         print(f"An error occurred: {e}")
 
+def get_a_column_data_type(cursor, table_name, column_name):
+    """
+    DESCRIPTION:
+        Given a table name and A column name, return the data type of the column.
+
+    INPUT SIGNATURE:
+        table_name: string
+        column_name: string
+    """
+
+    try:
+        cursor.execute(f"DESCRIBE `{table_name}`")
+        columns = cursor.fetchall()
+        for column in columns:
+            if column[0] == column_name:
+                return column[1]
+        return None
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        return None
+
 def add_entry_to_table(connection, cursor, table_name, entry_list):
     """
     INPUT SIGNATURE:
@@ -253,6 +274,29 @@ def remove_column(connection, cursor, table_name, column_name):
         connection.commit()
         print(f"Column '{column_name}' removed successfully from the table '{table_name}'.")
         
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
+def rename_column(connection, cursor, table_name, old_column_name, new_column_name):
+    """
+    DESCRIPTION:
+        Rename a column in the table.
+
+    INPUT SIGNATURE:
+        table_name: string
+        old_column_name: string
+        new_column_name: string
+    """
+
+    try:
+        data_type = get_a_column_data_type(cursor, table_name, old_column_name)
+        if data_type:
+            query = f"ALTER TABLE `{table_name}` CHANGE `{old_column_name}` `{new_column_name}` {data_type}"
+            cursor.execute(query)
+            connection.commit()
+            print(f"Column '{old_column_name}' renamed to '{new_column_name}' successfully in the table '{table_name}'.")
+        else:
+            print(f"Column '{old_column_name}' not found in the table '{table_name}'.")
     except Exception as e:
         print(f"An error occurred: {e}")
 

@@ -105,7 +105,6 @@ def delete_entry():
         except Exception as e:
             return render_template('error.html', error=f"An error occurred: {e}")
 
-
 @app.route('/add_column', methods=['GET', 'POST'])
 def add_column_flask():
 
@@ -147,6 +146,54 @@ def remove_column_flask():
             column_name = request.form['selected_column']
             remove_column(connection, cursor, table_name, column_name)
             return render_template('success.html', message=f"Column '{column_name}' removed successfully from the table '{table_name}'.")
+        except Exception as e:
+            return render_template('error.html', error=f"An error occurred: {e}")
+
+@app.route('/edit_entry', methods=['GET', 'POST'])
+def edit_entry():
+
+    if request.method == 'GET':
+
+        try:
+            table_name = session['selected_table']
+            columns_names = get_column_names(cursor, table_name)
+            return render_template('edit_entry.html', columns_names=columns_names, error_message=None)
+        
+        except Exception as e:
+            return render_template('error.html', error=f"An error occurred: {e}")
+
+    elif request.method == 'POST':
+        try:
+            table_name = session['selected_table']
+            identifier_column = request.form['identifier_column']
+            identifier_value = request.form['identifier_value']
+            edit_column = request.form['edit_column']
+            new_value = request.form['new_value']
+            update_row(connection, cursor, table_name, identifier_column, identifier_value, edit_column, new_value)
+            return render_template('success.html', message=f"Row with {identifier_column} value '{identifier_value}' updated successfully.")
+        except Exception as e:
+            return render_template('error.html', error=f"An error occurred: {e}")
+
+@app.route('/rename_column', methods=['GET', 'POST'])
+def rename_column_flask():
+
+    if request.method == 'GET':
+
+        try:
+            table_name = session['selected_table']
+            columns_names = get_column_names(cursor, table_name)
+            return render_template('rename_column.html', columns_names=columns_names, error_message=None)
+        
+        except Exception as e:
+            return render_template('error.html', error=f"An error occurred: {e}")
+
+    elif request.method == 'POST':
+        try:
+            table_name = session['selected_table']
+            old_column_name = request.form['old_column_name']
+            new_column_name = request.form['new_column_name']
+            rename_column(connection, cursor, table_name, old_column_name, new_column_name)
+            return render_template('success.html', message=f"Column '{old_column_name}' renamed to '{new_column_name}' successfully.")
         except Exception as e:
             return render_template('error.html', error=f"An error occurred: {e}")
 
