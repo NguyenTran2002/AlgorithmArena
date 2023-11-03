@@ -82,6 +82,30 @@ def add_entry():
         except Exception as e:
             return render_template('error.html', error=f"An error occurred: {e}")
 
+@app.route('/delete_entry', methods=['GET', 'POST'])
+def delete_entry():
+
+    if request.method == 'GET':
+
+        try:
+            table_name = session['selected_table']
+            columns_names = get_column_names(cursor, table_name)
+            return render_template('delete_entry.html', columns_names=columns_names, error_message=None)
+        
+        except Exception as e:
+            return render_template('error.html', error=f"An error occurred: {e}")
+
+    elif request.method == 'POST':
+        try:
+            table_name = session['selected_table']
+            column_name = request.form['selected_column']
+            column_value = request.form['column_value']
+            delete_row(connection, cursor, table_name, column_name, column_value)
+            return render_template('success.html', message=f"Row with value '{column_value}' at column {column_name} deleted successfully.")
+        except Exception as e:
+            return render_template('error.html', error=f"An error occurred: {e}")
+
+
 @app.route('/add_column', methods=['GET', 'POST'])
 def add_column_flask():
 
