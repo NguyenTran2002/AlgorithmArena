@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Delete Entry</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        h1 {
+            color: #333;
+        }
+        form {
+            margin-top: 20px;
+        }
+        label {
+            color: #666;
+        }
+        select, input[type=text] {
+            padding: 10px;
+            margin-bottom: 15px;
+            width: 30%;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+        input[type=submit] {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Delete Entry</h1>
+    <form action="/delete_entry" method="post">
+        <label for="selected_column">Select Identifier Column (MUST be a column that contains only unique values):</label><br>
+        <select name="selected_column" id="selected_column">
+            {% for column_name in columns_names %}
+                <option value="{{ column_name }}">{{ column_name }}</option>
+            {% endfor %}
+        </select><br>
+        <label for="column_value">Column Value:</label><br>
+        <input type="text" id="column_value" name="column_value"><br>
+        <input type="submit" value="Delete Entry">
+    </form>
+</body>
+</html>

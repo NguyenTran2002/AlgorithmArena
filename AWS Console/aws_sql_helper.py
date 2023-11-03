@@ -16,7 +16,18 @@ def load_aws_connection_properties():
     return os.getenv('aws_host'), int(os.getenv('aws_port')), os.getenv('aws_user'), os.getenv('aws_password'), os.getenv('aws_database')
 
 def connect_to_aws(host, port, user, password, database):
-    # Connect to the database
+    """
+    DESCRIPTION:
+        Return a connection and a cursor object to the AWS RDS database.
+
+    INPUT SIGNATURE:
+        host: string
+        port: integer
+        user: string
+        password: string
+        database: string
+    """
+
     connection = pymysql.connect(
         host = host,
         port = port,
@@ -90,6 +101,8 @@ def get_column_data_types(cursor, table_name):
     """
     DESCRIPTION:
         Given a table name, return the data types of the columns in the table.
+    INPUT SIGNATURE:
+        table_name: string
     """
 
     try:
@@ -100,6 +113,27 @@ def get_column_data_types(cursor, table_name):
     
     except Exception as e:
         print(f"An error occurred: {e}")
+
+def get_a_column_data_type(cursor, table_name, column_name):
+    """
+    DESCRIPTION:
+        Given a table name and A column name, return the data type of the column.
+
+    INPUT SIGNATURE:
+        table_name: string
+        column_name: string
+    """
+
+    try:
+        cursor.execute(f"DESCRIBE `{table_name}`")
+        columns = cursor.fetchall()
+        for column in columns:
+            if column[0] == column_name:
+                return column[1]
+        return None
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        return None
 
 def add_entry_to_table(connection, cursor, table_name, entry_list):
     """
@@ -127,7 +161,31 @@ def add_entry_to_table(connection, cursor, table_name, entry_list):
     except Exception as e:
         print(f"An error occurred: {e}")
 
+def delete_row(connection, cursor, table_name, column_name, column_value):
+    """
+    DESCRIPTION:
+        Look for a row that has the value 'column_value' at the column 'column_name'.
+        Delete that row.
+
+    INPUT SIGNATURE:
+        table_name: string
+        column_name: string
+        column_value: same type as the database type
+    """
+
+    try:
+        query = f"DELETE FROM {table_name} WHERE {column_name} = %s"
+        cursor.execute(query, (column_value,))
+        connection.commit()
+        print(f"Row with {column_name} value '{column_value}' deleted successfully.")
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
 def retrieve_all_rows(cursor, table_name):
+    """
+    INPUT SIGNATURE:
+        table_name: string
+    """
 
     try:
         cursor.execute(f"SELECT * FROM {table_name}")
@@ -143,6 +201,12 @@ def get_column2_given_column1(cursor, table_name, column_1, column_2, column_1_v
         Given a specific value of column_1,
             find the row with that specific value at column_1,
             then return the value of column_2 in that row.
+
+    INPUT SIGNATURE:
+        table_name: string
+        column_1: string
+        column_2: string
+        column_1_val: same type as the database type
     """
 
     try:
@@ -159,6 +223,10 @@ def get_column2_given_column1(cursor, table_name, column_1, column_2, column_1_v
         print(f"An error occurred: {e}")
 
 def get_table_names(cursor):
+    """
+    DESCRIPTION:
+        Given a cursor object, return all available tables within the database.
+    """
 
     try:
         cursor.execute("SHOW TABLES")
@@ -170,6 +238,16 @@ def get_table_names(cursor):
         print(f"An error occurred: {e}")
 
 def add_column(connection, cursor, table_name, column_name, data_type):
+    """
+    DESCRIPTION:
+        Add a column to the table.
+
+    INPUT SIGNATURE:
+        table_name: string
+        column_name: string
+        data_type: corresponding SQL data type
+            input this as a string
+    """
 
     try:
         query = f"ALTER TABLE {table_name} ADD {column_name} {data_type}"
@@ -181,6 +259,14 @@ def add_column(connection, cursor, table_name, column_name, data_type):
         print(f"An error occurred: {e}")
 
 def remove_column(connection, cursor, table_name, column_name):
+    """
+    DESCRIPTION:
+        Remove a column from the table.
+
+    INPUT SIGNATURE:
+        table_name: string
+        column_name: string
+    """
 
     try:
         query = f"ALTER TABLE {table_name} DROP COLUMN {column_name}"
@@ -191,13 +277,49 @@ def remove_column(connection, cursor, table_name, column_name):
     except Exception as e:
         print(f"An error occurred: {e}")
 
+def rename_column(connection, cursor, table_name, old_column_name, new_column_name):
+    """
+    DESCRIPTION:
+        Rename a column in the table.
+
+    INPUT SIGNATURE:
+        table_name: string
+        old_column_name: string
+        new_column_name: string
+    """
+
+    try:
+        data_type = get_a_column_data_type(cursor, table_name, old_column_name)
+        if data_type:
+            query = f"ALTER TABLE `{table_name}` CHANGE `{old_column_name}` `{new_column_name}` {data_type}"
+            cursor.execute(query)
+            connection.commit()
+            print(f"Column '{old_column_name}' renamed to '{new_column_name}' successfully in the table '{table_name}'.")
+        else:
+            print(f"Column '{old_column_name}' not found in the table '{table_name}'.")
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
 def update_row(connection, cursor, table_name, identifier_column, identifier_value, edit_column, new_value):
+    """
+    DESCRIPTION:
+        Given a table name, an identifier column name, and a value of that row at that identifier column,
+            update the value at another column in that row.
+        THE IDENTIFIER COLUMN MUST BE A COLUMN THAT CONTAINS ONLY UNIQUE VALUES
+
+    INPUT SIGNATURE:
+        table_name: string
+        identifier_column: string
+        identifier_value: same type as the database type
+        edit_column: string
+        new_value: same type as the database type
+    """
 
     try:
         query = f"UPDATE {table_name} SET {edit_column} = %s WHERE {identifier_column} = %s"
         cursor.execute(query, (new_value, identifier_value))
         connection.commit()
         print(f"Row with {identifier_column} value '{identifier_value}' updated successfully.")
-        
+
     except Exception as e:
         print(f"An error occurred: {e}")

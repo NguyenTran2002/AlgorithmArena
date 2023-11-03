@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Entry</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        h1 {
+            color: #333;
+        }
+        form {
+            margin-top: 20px;
+        }
+        label {
+            color: #666;
+        }
+        select, input[type=text] {
+            padding: 10px;
+            margin-bottom: 15px;
+            width: 30%;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+        input[type=submit] {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Edit Entry</h1>
+    <form action="/edit_entry" method="post">
+        <label for="identifier_column">Select Identifier Column (MUST be a column that contains only unique values):</label><br>
+        <select name="identifier_column" id="identifier_column">
+            {% for column_name in columns_names %}
+                <option value="{{ column_name }}">{{ column_name }}</option>
+            {% endfor %}
+        </select><br>
+        <label for="identifier_value">Identifier Value:</label><br>
+        <input type="text" id="identifier_value" name="identifier_value"><br>
+        <label for="edit_column">Column to Edit:</label><br>
+        <select name="edit_column" id="edit_column">
+            {% for column_name in columns_names %}
+                <option value="{{ column_name }}">{{ column_name }}</option>
+            {% endfor %}
+        </select><br>
+        <label for="new_value">New Value:</label><br>
+        <input type="text" id="new_value" name="new_value"><br>
+        <input type="submit" value="Edit Entry">
+    </form>
+</body>
+</html>
