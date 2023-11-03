@@ -190,3 +190,14 @@ def remove_column(connection, cursor, table_name, column_name):
         
     except Exception as e:
         print(f"An error occurred: {e}")
+
+def update_row(connection, cursor, table_name, identifier_column, identifier_value, edit_column, new_value):
+
+    try:
+        query = f"UPDATE {table_name} SET {edit_column} = %s WHERE {identifier_column} = %s"
+        cursor.execute(query, (new_value, identifier_value))
+        connection.commit()
+        print(f"Row with {identifier_column} value '{identifier_value}' updated successfully.")
+        
+    except Exception as e:
+        print(f"An error occurred: {e}")
