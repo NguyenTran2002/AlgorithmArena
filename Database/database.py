@@ -71,8 +71,11 @@ def get_all_problems():
 
     if len(all_problems) == 0:
         problems = retrieve_all_rows_of_column(aws_cursor, "problems", "problem")
+        print("\n\n\nFROM AWS: ", problems)
         for problem in problems:
             all_problems.add(problem)
+
+    print ("\n\n\nALL PROBLEMS: ", all_problems)
 
     # prepare the data into json
     data = {'problems' : list(all_problems)}
