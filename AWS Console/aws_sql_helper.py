@@ -195,6 +195,27 @@ def retrieve_all_rows(cursor, table_name):
     except Exception as e:
         print(f"An error occurred: {e}")
 
+def retrieve_all_rows_of_column(cursor, table_name, column_name):
+    """
+    DESCRIPTION:
+        Given a table name and a column name, return all the values in that column.
+
+    INPUT SIGNATURE:
+        cursor: cursor object
+        table_name: string
+        column_name: string
+    """
+
+    try:
+        query = f"SELECT `{column_name}` FROM `{table_name}`"
+        cursor.execute(query)
+        rows = cursor.fetchall()
+        column_data = [row[0] for row in rows]
+        return column_data
+    
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
 def get_column2_given_column1(cursor, table_name, column_1, column_2, column_1_val):
     """
     DESCRIPTION:
@@ -323,3 +344,32 @@ def update_row(connection, cursor, table_name, identifier_column, identifier_val
 
     except Exception as e:
         print(f"An error occurred: {e}")
+
+def check_value_exists(cursor, table_name, column_name, value):
+    """
+    DESCRIPTION:
+        Given a table name, a column name, and a value,
+            check if the value exists in the column.
+
+    INPUT SIGNATURE:
+        cursor: cursor object
+        table_name: string
+        column_name: string
+        value: same type as the database type
+
+    OUTPUT SIGNATURE:
+        True if value exists in the column, False otherwise
+    """
+
+    try:
+        query = f"SELECT * FROM {table_name} WHERE {column_name} = %s"
+        cursor.execute(query, (value,))
+        result = cursor.fetchone()
+        if result:
+            return True
+        else:
+            return False
+        
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        return False
