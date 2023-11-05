@@ -344,3 +344,32 @@ def update_row(connection, cursor, table_name, identifier_column, identifier_val
 
     except Exception as e:
         print(f"An error occurred: {e}")
+
+def check_value_exists(cursor, table_name, column_name, value):
+    """
+    DESCRIPTION:
+        Given a table name, a column name, and a value,
+            check if the value exists in the column.
+
+    INPUT SIGNATURE:
+        cursor: cursor object
+        table_name: string
+        column_name: string
+        value: same type as the database type
+
+    OUTPUT SIGNATURE:
+        True if value exists in the column, False otherwise
+    """
+
+    try:
+        query = f"SELECT * FROM {table_name} WHERE {column_name} = %s"
+        cursor.execute(query, (value,))
+        result = cursor.fetchone()
+        if result:
+            return True
+        else:
+            return False
+        
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        return False

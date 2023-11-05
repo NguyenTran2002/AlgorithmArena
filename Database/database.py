@@ -94,8 +94,8 @@ def authenticate():
 
         # Check if problem is given in post request
         if 'username' not in data or 'password' not in data:
-            print("Error 1 Database: Missing 'username' or 'password' in the request data")
-            return jsonify({'Error 1 Database': 'Missing "username" or "password" in the request data'}), 400
+            print("Error in Database Container within the authenticate function:\nMissing 'username' or 'password' in the request data")
+            return jsonify({'authentication_result' : 'Missing "username" or "password" in the request data'}), 400
         
         else:
 
@@ -121,9 +121,62 @@ def authenticate():
             
     except Exception as e:
 
+        print ("\n\n\n-----------------------------")
+        print("Error in Database Container within the authenticate function.")
         print("ENCOUNTERED THE FOLLOWING EXCEPTION:\n", e)
+        print ("-----------------------------\n\n\n")
 
-        return jsonify({'Error 1 Database': "Didn't receive any json."}), 500
+        return jsonify({'authentication_result' : "Didn't receive any json."}), 500
+
+@app.route('/sign_up', methods=['POST'])
+def sign_up():
+
+    global aws_connection
+    global aws_cursor
+
+    try:
+
+        data = request.get_json()
+
+        # Check if problem is given in post request
+        if 'username' not in data or 'password' not in data:
+            print("Error in Database Container within the sign_up function:\nMissing 'username' or 'password' in the request data")
+            return jsonify({'sign_up_result': 'Missing "username" or "password" in the request data'}), 400
+        
+        else:
+
+            username = data['username']
+            password = data['password']
+
+            username_exists = check_value_exists(aws_cursor, "user_logins", "username", username)
+
+            if username_exists:
+                return jsonify({'sign_up_result' : "Username already exists"}), 500
+            
+            else:
+
+                try:
+                    new_entry = [username, password]
+                    add_entry_to_table(aws_connection, aws_cursor, "user_logins", new_entry)
+                    return jsonify({'sign_up_result' : 'Success'})
+                
+                except Exception as e:
+                    print ("\n\n\n-----------------------------")
+                    print("Error in Database Container within the sign_up function.")
+                    print("Error encountered at MARK 1")
+                    print("ENCOUNTERED THE FOLLOWING EXCEPTION:\n", e)
+                    print ("-----------------------------\n\n\n")
+                    return jsonify({'sign_up_result' : "Failed"}), 500
+            
+    except Exception as e:
+
+        print ("\n\n\n-----------------------------")
+        print("Error in Database Container within the sign_up function.")
+        print("ENCOUNTERED THE FOLLOWING EXCEPTION:\n", e)
+        print ("-----------------------------\n\n\n")
+
+        return jsonify({'sign_up_result' : "Didn't receive any json."}), 500
+
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", debug=True, port = 7432)
