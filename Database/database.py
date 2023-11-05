@@ -121,9 +121,21 @@ def authenticate():
             
     except Exception as e:
 
+        print ("\n\n\n-----------------------------")
+        print("Error in Database Container within the authenticate function.")
         print("ENCOUNTERED THE FOLLOWING EXCEPTION:\n", e)
+        print ("-----------------------------\n\n\n")
 
-        return jsonify({'Error 1 Database': "Didn't receive any json."}), 500
+        return jsonify({'authentication_result' : "Didn't receive any json."}), 500
+
+@app.route('/sign_up', methods=['POST'])
+def sign_up():
+
+    global aws_connection
+    global aws_cursor
+
+
+
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", debug=True, port = 7432)
