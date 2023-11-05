@@ -61,28 +61,26 @@ def get_test_cases():
         print("ENCOUNTERED THE FOLLOWING EXCEPTION:\n", e)
 
         return jsonify({'Error 3 Database': "Didn't receive any json."}), 500
-    
 
 @app.route('/get_all_problems', methods=['POST'])
 def get_all_problems():
 
-    global client
     global all_problems
+    global aws_connection
+    global aws_cursor
 
     if len(all_problems) == 0:
+        problems = retrieve_all_rows_of_column(aws_cursor, "problems", "problem")
+        print("\n\n\nFROM AWS: ", problems)
+        for problem in problems:
+            all_problems.add(problem)
 
-        collection = get_collection(client = client,
-            database_name = 'qa-repo',
-            collection_name = 'qa')
-        
-        for problem in collection.find():
-            all_problems.add(problem['problem_name'])
+    print ("\n\n\nALL PROBLEMS: ", all_problems)
 
     # prepare the data into json
     data = {'problems' : list(all_problems)}
 
     return jsonify(data)
-
 
 @app.route('/authenticate', methods=['POST'])
 def authenticate():
