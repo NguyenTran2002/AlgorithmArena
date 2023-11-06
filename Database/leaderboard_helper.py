@@ -4,10 +4,27 @@ import os
 from aws_sql_helper import *
 
 """
-1. given a username and problem solved, then will add that to database, need to check if problem already in solved list
-2. return x number of users that have solved the most problems
-"""
+The function expects a JSON object with 4 fields
 
+    'username' : string
+    'solved_problem' : string
+    'cursor' : cursor object
+    'connection' : connection object
+
+The function doesn't return anything
+
+    'authentication_result' : 'string'
+
+The result will be 1 of the following 3 possibilities
+
+'Username Doesn't Exist'
+'Incorrect Password'
+'Success'
+
+This function will take in the username and the problem the user just solved, and check if the user has already
+solved it. If not, it will update the database to contain the newly solved problem.
+
+"""
 def update_problem_list(username, solved_problem, cursor, connection):
     # find correct row given username in db
     # update both value of problem list and problem number
@@ -49,6 +66,23 @@ def update_problem_list(username, solved_problem, cursor, connection):
     edit_column = 'number_of_solved_problems',
     new_value = num_problems_solved
 )
+    
+
+
+"""
+The function expects a JSON object with 3 fields
+
+    'cursor' : cursor object
+    'connection' : connection object
+    'users_wanted' : int
+
+The function returns a list of tuples that has the X users with the most solved problems
+
+    'result' : 'list of tuples'
+
+This function will take in the number of users wanted and return the top X users with the
+most problems solved in a tuple format.
+"""
     
 def get_best_users(cursor, connection, users_wanted):
     try:
