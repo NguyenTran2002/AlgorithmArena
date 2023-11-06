@@ -4,6 +4,10 @@ import os
 import requests
 from exec_class import run_method_from_string
 import time
+import collections
+import collections.abc
+collections.Iterable = collections.abc.Iterable
+from flask_cors import CORS, cross_origin
 
 """
 This function imports a .py file that has the user written program, runs it, and returns whether the program
@@ -14,8 +18,12 @@ main_url = 'http://main:2727'
 database_url = 'http://database:7432/get_test_cases'
 
 app = Flask(__name__)
+# CORS(app, resources={r"localhost/*": {"origins": "http://localhost:8080"}, "allow_headers": ["Content-Type"]})
+CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
 
 @app.route('/', methods=['POST'])
+@cross_origin(origin='*')
 def evaluate():
     """
     1. get the json object from main that has
@@ -30,9 +38,11 @@ def evaluate():
     # doing number 1
     try:
         data_dict = request.get_json()
+        print(data_dict)
 
     except Exception as e:
         message = f"Error1 eval: {str(e)}"
+        print(message)
 
     # doing number 2
     try:
@@ -45,12 +55,14 @@ def evaluate():
 
     except Exception as e:
         message = f"Error2 eval: {str(e)}"
+        print(message)
 
     # doing number 3
     passed = True
     params = []
     average_time = 0
-    num_testcases = len(test_cases_answers[test_cases_answers["inputs"][0]])
+    # num_testcases = len(test_cases_answers[test_cases_answers["inputs"][0]])
+    num_testcases = len([test_cases_answers["inputs"][0]])
     for param in test_cases_answers["inputs"]:
         for key in test_cases_answers:
             if key == param:
@@ -79,5 +91,13 @@ def evaluate():
         }
     return jsonify(result)
 
+
+# @app.after_request
+# def after_request(response):
+#   response.headers.add('Access-Control-Allow-Origin', '*')
+#   response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+#   response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
+#   return response
+
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", debug=True, port = 1111)
+    app.run(host="0.0.0.0", port = 1111)

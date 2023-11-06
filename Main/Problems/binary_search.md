@@ -22,3 +22,8 @@ You must write an algorithm with O(log n) runtime complexity.
     -104 < nums[i], target < 104
     All the integers in nums are unique.
     nums is sorted in ascending order.
+
+# Starter Code
+Each indent is four spaces!<br>
+<br>`class Solution:`<br>
+&nbsp;&nbsp;&nbsp;&nbsp;`def binary_search(self, nums: list[int], target: int) -> int:`

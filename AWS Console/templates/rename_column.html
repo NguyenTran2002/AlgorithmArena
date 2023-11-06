@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Rename Column</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        h1 {
+            color: #333;
+        }
+        form {
+            margin-top: 20px;
+        }
+        label {
+            color: #666;
+        }
+        select, input[type=text] {
+            padding: 10px;
+            margin-bottom: 15px;
+            width: 30%;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+        input[type=submit] {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Rename Column</h1>
+    <form action="/rename_column" method="post">
+        <label for="old_column_name">Select Column to Rename:</label><br>
+        <select name="old_column_name" id="old_column_name">
+            {% for column_name in columns_names %}
+                <option value="{{ column_name }}">{{ column_name }}</option>
+            {% endfor %}
+        </select><br>
+        <label for="new_column_name">New Column Name:</label><br>
+        <input type="text" id="new_column_name" name="new_column_name"><br>
+        <input type="submit" value="Rename Column">
+    </form>
+</body>
+</html>

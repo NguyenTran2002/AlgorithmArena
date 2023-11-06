@@ -28,3 +28,8 @@ Return the minimum integer k such that she can eat all the bananas within h hour
     1 <= piles.length <= 104
     piles.length <= h <= 109
     1 <= piles[i] <= 109
+
+# Starter Code
+Each indent is four spaces!<br>
+<br>`class Solution:`<br>
+&nbsp;&nbsp;&nbsp;&nbsp;`def koko_eating_bananas(self, piles: list[int], h: int) -> int:`
