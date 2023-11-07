@@ -110,6 +110,21 @@ most problems solved in a tuple format.
 """
     
 def get_top_n_users(cursor, n):
+    """
+    DESCRIPTION:
+        Return the top n users with the most problems solved.
+        The format is a 2D array.
+
+    INPUT SIGNATURE:
+        cursor: cursor object
+        n: int (number of top users wanted)
+
+    OUTPUT SIGNATURE:
+        top_n_users_and_number_of_solved_problems: 2D array
+            1st place user is top_n_users_and_number_of_solved_problems[0]
+                - To get the username, do top_n_users_and_number_of_solved_problems[0][0]
+                - To get the number of solved problems, do top_n_users_and_number_of_solved_problems[0][1]
+    """
 
     rows = get_table_sorted_by(
         cursor = cursor,
