@@ -94,7 +94,6 @@ def update_leaderboard_database(connection, cursor, username, newly_solved_probl
         print(f"An error occurred: {e}")
         return e
 
-
 """
 The function expects a JSON object with 3 fields
 

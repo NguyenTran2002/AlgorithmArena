@@ -373,3 +373,28 @@ def check_value_exists(cursor, table_name, column_name, value):
     except Exception as e:
         print(f"An error occurred: {e}")
         return False
+    
+def get_table_sorted_by(cursor, table_name, sort_column, ascending = False):
+    """
+    DESCRIPTION:
+        Given a table name and a column name,
+            return all the rows in the table sorted by the column name.
+
+    INPUT SIGNATURE:
+        cursor: cursor object
+        table_name: string
+        sort_column: string
+        ascending: boolean
+            True if ascending, False if descending
+    """
+
+    try:
+        query = f"SELECT * FROM {table_name} ORDER BY {sort_column}"
+        if not ascending:
+            query += " DESC"
+        cursor.execute(query)
+        rows = cursor.fetchall()
+        return rows
+    
+    except Exception as e:
+        print(f"An error occurred: {e}")
