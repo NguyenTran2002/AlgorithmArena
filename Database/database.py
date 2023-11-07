@@ -24,6 +24,45 @@ aws_connection, aws_cursor = connect_to_aws(aws_host, aws_port, aws_user, aws_pa
 
 all_problems = set()
 
+@app.route('/get_problem_md', methods=['POST'])
+def get_problem_md():
+
+    global client
+
+    print("Received a request to retrieve the markdown of a problem")
+
+    try:
+        
+        data = request.get_json()
+
+        # Check if problem is given in post request
+        if 'problem' not in data:
+            print("Error 1 Database: Missing 'problem' in the request data")
+            return jsonify({'Error 1 Database': 'Missing "problem" in the request data'}), 400
+        
+        else:
+
+            problem = data['problem']
+
+            collection = get_collection(
+                client = client,
+                database_name = 'qa-repo',
+                collection_name = 'markdown_repo')
+
+            markdown = collection.find_one({"problem_name" : problem})['markdown']
+
+            if markdown is None:
+                return jsonify({'markdown': 'Cannot find the problem in the database'}), 500
+            
+            else:
+                return jsonify({'markdown': markdown})
+            
+    except Exception as e:
+
+        print("ENCOUNTERED THE FOLLOWING EXCEPTION:\n", e)
+
+        return jsonify({'markdown': "Didn't receive any json"}), 500
+
 @app.route('/get_test_cases', methods=['POST'])
 def get_test_cases():
 
