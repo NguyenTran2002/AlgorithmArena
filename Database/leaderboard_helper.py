@@ -94,7 +94,6 @@ def update_leaderboard_database(connection, cursor, username, newly_solved_probl
         print(f"An error occurred: {e}")
         return e
 
-
 """
 The function expects a JSON object with 3 fields
 
@@ -110,15 +109,32 @@ This function will take in the number of users wanted and return the top X users
 most problems solved in a tuple format.
 """
     
-def get_best_users(cursor, connection, users_wanted):
-    try:
-        query = f"SELECT username, solved_problems, num_problems_solved FROM leaderboard order by number_of_solved_problems DESC LIMIT {users_wanted}"
-        cursor.execute(query)
-        result = cursor.fetchall()
-        connection.commit()
-        print(f"Result of x most solved problems users' saved successfully.")
+def get_top_n_users(cursor, n):
+    """
+    DESCRIPTION:
+        Return the top n users with the most problems solved.
+        The format is a 2D array.
 
-    except Exception as e:
-        print(f"An error occurred: {e}")
+    INPUT SIGNATURE:
+        cursor: cursor object
+        n: int (number of top users wanted)
+
+    OUTPUT SIGNATURE:
+        top_n_users_and_number_of_solved_problems: 2D array
+            1st place user is top_n_users_and_number_of_solved_problems[0]
+                - To get the username, do top_n_users_and_number_of_solved_problems[0][0]
+                - To get the number of solved problems, do top_n_users_and_number_of_solved_problems[0][1]
+    """
+
+    rows = get_table_sorted_by(
+        cursor = cursor,
+        table_name = "leaderboard",
+        sort_column = "number_of_solved_problems"
+        )
     
-    return result
+    top_n_users_and_number_of_solved_problems = []
+
+    for i in range(n):
+        top_n_users_and_number_of_solved_problems.append([rows[i][0], rows[i][2]])
+
+    return top_n_users_and_number_of_solved_problems
