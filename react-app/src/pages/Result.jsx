@@ -12,7 +12,7 @@ function Result() {
 
     // Access the state variables from the location object
     const { state } = location;
-    const { user_problem, user_answer } = state || {};
+    const { problem, user_code } = state || {};
     const [result, setResult] = useState();
     const [success, setSuccess] = useState();
 
@@ -21,8 +21,8 @@ function Result() {
         async function fetchResult() {
           try {
             const post_data = {
-              user_code: user_answer,
-              problem: user_problem,
+              user_code: user_code,
+              problem: problem,
 
             };
 

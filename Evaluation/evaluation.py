@@ -51,7 +51,6 @@ def evaluate():
         }
 
         data = requests.post(database_url, json=problem_name)
-        print(data)
         test_cases_answers = data.json()
 
     except Exception as e:
@@ -62,7 +61,8 @@ def evaluate():
     passed = True
     params = []
     average_time = 0
-    num_testcases = len(test_cases_answers[test_cases_answers["inputs"][0]])
+    # num_testcases = len(test_cases_answers[test_cases_answers["inputs"][0]])
+    num_testcases = len([test_cases_answers["inputs"][0]])
     for param in test_cases_answers["inputs"]:
         for key in test_cases_answers:
             if key == param:
@@ -100,4 +100,4 @@ def evaluate():
 #   return response
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", debug=True, port = 1111)
+    app.run(host="0.0.0.0", port = 1111)
