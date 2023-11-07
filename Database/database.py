@@ -127,7 +127,7 @@ def authenticate():
         print("ENCOUNTERED THE FOLLOWING EXCEPTION:\n", e)
         print ("-----------------------------\n\n\n")
 
-        return jsonify({'authentication_result' : "Didn't receive any json."}), 500
+        return jsonify({'authentication_result' : "Didn't receive any json"}), 500
 
 @app.route('/sign_up', methods=['POST'])
 def sign_up():
@@ -176,7 +176,7 @@ def sign_up():
         print("ENCOUNTERED THE FOLLOWING EXCEPTION:\n", e)
         print ("-----------------------------\n\n\n")
 
-        return jsonify({'sign_up_result' : "Didn't receive any json."}), 500
+        return jsonify({'sign_up_result' : "Didn't receive any json"}), 500
 
 @app.route('/update_leaderboard', methods=['POST'])
 def update_leaderboard():
@@ -213,11 +213,11 @@ def update_leaderboard():
                     return jsonify({'update_leaderboard_result' : 'Success'})
                 
                 else:
-                    return jsonify({'update_leaderboard_result' : result}), 500
+                    return jsonify({'update_leaderboard_result' : 'Failed'}), 500
             
             else:
                 print("Error in Database Container within the update_learderboard function:\nThe username doesn't exist.")
-                return jsonify({'update_leaderboard_result' : "The username does not exist."}), 400
+                return jsonify({'update_leaderboard_result' : "The username does not exist"}), 400
             
     except Exception as e:
 
@@ -226,7 +226,7 @@ def update_leaderboard():
         print("ENCOUNTERED THE FOLLOWING EXCEPTION:\n", e)
         print ("-----------------------------\n\n\n")
 
-        return jsonify({'update_leaderboard_result' : "Didn't receive any json."}), 500
+        return jsonify({'update_leaderboard_result' : "Didn't receive any json"}), 500
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", debug=True, port = 7432)
