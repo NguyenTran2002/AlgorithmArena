@@ -189,14 +189,13 @@ def update_leaderboard():
         data = request.get_json()
 
         # Check if problem is given in post request
-        if 'username' not in data or 'password' not in data:
-            print("Error in Database Container within the update_learderboard function:\nMissing 'username' or 'password' in the request data")
-            return jsonify({'update_leaderboard_result': 'Missing "username" or "password" in the request data'}), 400
+        if 'username' not in data:
+            print("Error in Database Container within the update_learderboard function:\nMissing 'username' in the request data")
+            return jsonify({'update_leaderboard_result': 'Missing "username" in the request data'}), 400
         
         else:
 
             username = data['username']
-            password = data['password']
             newly_solved_problem = data['newly_solved_problem']
 
             username_exists = check_value_exists(aws_cursor, "user_logins", "username", username)
@@ -207,7 +206,7 @@ def update_leaderboard():
                     connection=aws_connection,
                     cursor=aws_cursor,
                     username=username,
-                    newly_solved_problem=data['newly_solved_problem']
+                    newly_solved_problem=newly_solved_problem
                 )
 
                 if result == "Success":
