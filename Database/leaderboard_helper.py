@@ -25,48 +25,74 @@ This function will take in the username and the problem the user just solved, an
 solved it. If not, it will update the database to contain the newly solved problem.
 
 """
-def update_problem_list(username, solved_problem, cursor, connection):
-    # find correct row given username in db
-    # update both value of problem list and problem number
-    solved_problems = get_column2_given_column1(
-    cursor = cursor,
-    table_name = 'leaderboard',
-    column_1 = 'username',
-    column_2 = 'solved_problems',
-    column_1_val = username
-)
-    num_problems_solved = get_column2_given_column1(
-    cursor = cursor,
-    table_name = 'leaderboard',
-    column_1 = 'username',
-    column_2 = 'number_of_solved_problems',
-    column_1_val = username
-)
-    # want to check if problem already solved then don't need this code
-    if solved_problem not in solved_problems:
-        solved_problems = solved_problems[1:-1]
-        solved_problems = '[' + solved_problems + ", " + solved_problem + "]"
-        num_problems_solved += 1
+def update_leaderboard_database(connection, cursor, username, newly_solved_problem):
+    """
+    DESCRIPTION:
+        When called, this function will update the leaderboard database to reflect the newly solved problem by the user.
+
+    INPUT SIGNATURE:
+        connection: connection object
+        cursor: cursor object
+        username: string
+        newly_solved_problem: string
+
+    OUTPUT SIGNATURE:
+        "Success" if the database was updated successfully, otherwise an error message will be returned.
+    """
+
+    try:
+
+        # find correct row given username in db
+        # update both value of problem list and problem number
+        solved_problems = get_column2_given_column1(
+            cursor = cursor,
+            table_name = 'leaderboard',
+            column_1 = 'username',
+            column_2 = 'solved_problems',
+            column_1_val = username
+        )
+
+        num_problems_solved = get_column2_given_column1(
+            cursor = cursor,
+            table_name = 'leaderboard',
+            column_1 = 'username',
+            column_2 = 'number_of_solved_problems',
+            column_1_val = username
+        )
+
+        # want to check if problem already solved then don't need this code
+        if newly_solved_problem not in solved_problems:
+            solved_problems = solved_problems[1:-1]
+            solved_problems = '[' + solved_problems + ", " + newly_solved_problem + "]"
+            num_problems_solved += 1
+        
+        # update_row method was not in aws sql helper in database but in the aws console version, updated aws sql helper
+        # in the database folder
+        update_row(
+            connection = connection,
+            cursor = cursor,
+            table_name = 'leaderboard',
+            identifier_column = 'username',
+            identifier_value = username,
+            edit_column = 'solved_problems',
+            new_value = solved_problems
+        )
+
+        update_row(
+            connection = connection,
+            cursor = cursor,
+            table_name = 'leaderboard',
+            identifier_column = 'username',
+            identifier_value = username,
+            edit_column = 'number_of_solved_problems',
+            new_value = num_problems_solved
+        )
+
+        return "Success"
     
-    # update_row method was not in aws sql helper in database but in the aws console version, updated aws sql helper
-    # in the database folder
-    update_row(connection = connection,
-    cursor = cursor,
-    table_name = 'leaderboard',
-    identifier_column = 'username',
-    identifier_value = 'albert',
-    edit_column = 'solved_problems',
-    new_value = solved_problems
-)
-    update_row(connection = connection,
-    cursor = cursor,
-    table_name = 'leaderboard',
-    identifier_column = 'username',
-    identifier_value = 'albert',
-    edit_column = 'number_of_solved_problems',
-    new_value = num_problems_solved
-)
-    
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        return e
 
 
 """

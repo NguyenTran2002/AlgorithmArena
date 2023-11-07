@@ -12,6 +12,7 @@ from flask import Flask, jsonify, request
 
 from mongo_helper import *
 from aws_sql_helper import *
+from leaderboard_helper import *
 
 app = Flask(__name__)
 CORS(app)
@@ -126,7 +127,7 @@ def authenticate():
         print("ENCOUNTERED THE FOLLOWING EXCEPTION:\n", e)
         print ("-----------------------------\n\n\n")
 
-        return jsonify({'authentication_result' : "Didn't receive any json."}), 500
+        return jsonify({'authentication_result' : "Didn't receive any json"}), 500
 
 @app.route('/sign_up', methods=['POST'])
 def sign_up():
@@ -175,8 +176,57 @@ def sign_up():
         print("ENCOUNTERED THE FOLLOWING EXCEPTION:\n", e)
         print ("-----------------------------\n\n\n")
 
-        return jsonify({'sign_up_result' : "Didn't receive any json."}), 500
+        return jsonify({'sign_up_result' : "Didn't receive any json"}), 500
 
+@app.route('/update_leaderboard', methods=['POST'])
+def update_leaderboard():
+
+    global aws_connection
+    global aws_cursor
+
+    try:
+
+        data = request.get_json()
+
+        # Check if problem is given in post request
+        if 'username' not in data:
+            print("Error in Database Container within the update_learderboard function:\nMissing 'username' in the request data")
+            return jsonify({'update_leaderboard_result': 'Missing "username" in the request data'}), 400
+        
+        else:
+
+            username = data['username']
+            newly_solved_problem = data['newly_solved_problem']
+
+            username_exists = check_value_exists(aws_cursor, "user_logins", "username", username)
+
+            if username_exists:
+                
+                result = update_leaderboard_database(
+                    connection=aws_connection,
+                    cursor=aws_cursor,
+                    username=username,
+                    newly_solved_problem=newly_solved_problem
+                )
+
+                if result == "Success":
+                    return jsonify({'update_leaderboard_result' : 'Success'})
+                
+                else:
+                    return jsonify({'update_leaderboard_result' : 'Failed'}), 500
+            
+            else:
+                print("Error in Database Container within the update_learderboard function:\nThe username doesn't exist.")
+                return jsonify({'update_leaderboard_result' : "The username does not exist"}), 400
+            
+    except Exception as e:
+
+        print ("\n\n\n-----------------------------")
+        print("Error in Database Container within the update_leaderboard function.")
+        print("ENCOUNTERED THE FOLLOWING EXCEPTION:\n", e)
+        print ("-----------------------------\n\n\n")
+
+        return jsonify({'update_leaderboard_result' : "Didn't receive any json"}), 500
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", debug=True, port = 7432)
