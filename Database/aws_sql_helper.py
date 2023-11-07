@@ -82,30 +82,6 @@ def delete_table(connection, cursor, table_name):
     except Exception as e:
         print(f"An error occurred: {e}")
 
-def update_row(connection, cursor, table_name, identifier_column, identifier_value, edit_column, new_value):
-    """
-    DESCRIPTION:
-        Given a table name, an identifier column name, and a value of that row at that identifier column,
-            update the value at another column in that row.
-        THE IDENTIFIER COLUMN MUST BE A COLUMN THAT CONTAINS ONLY UNIQUE VALUES
-
-    INPUT SIGNATURE:
-        table_name: string
-        identifier_column: string
-        identifier_value: same type as the database type
-        edit_column: string
-        new_value: same type as the database type
-    """
-
-    try:
-        query = f"UPDATE {table_name} SET {edit_column} = %s WHERE {identifier_column} = %s"
-        cursor.execute(query, (new_value, identifier_value))
-        connection.commit()
-        print(f"Row with {identifier_column} value '{identifier_value}' updated successfully.")
-
-    except Exception as e:
-        print(f"An error occurred: {e}")
-
 def get_column_names(cursor, table_name):
     """
     INPUT SIGNATURE:
@@ -397,3 +373,28 @@ def check_value_exists(cursor, table_name, column_name, value):
     except Exception as e:
         print(f"An error occurred: {e}")
         return False
+    
+def get_table_sorted_by(cursor, table_name, sort_column, ascending = False):
+    """
+    DESCRIPTION:
+        Given a table name and a column name,
+            return all the rows in the table sorted by the column name.
+
+    INPUT SIGNATURE:
+        cursor: cursor object
+        table_name: string
+        sort_column: string
+        ascending: boolean
+            True if ascending, False if descending
+    """
+
+    try:
+        query = f"SELECT * FROM {table_name} ORDER BY {sort_column}"
+        if not ascending:
+            query += " DESC"
+        cursor.execute(query)
+        rows = cursor.fetchall()
+        return rows
+    
+    except Exception as e:
+        print(f"An error occurred: {e}")
