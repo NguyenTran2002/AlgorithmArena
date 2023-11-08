@@ -266,6 +266,32 @@ def update_leaderboard():
         print ("-----------------------------\n\n\n")
 
         return jsonify({'update_leaderboard_result' : "Didn't receive any json"}), 500
+    
+@app.route('/get_top_users', methods=['POST'])
+def get_top_users():
+
+    global aws_connection
+    global aws_cursor
+
+    try:
+
+        data = request.get_json()
+
+        # Check if problem is given in post request
+
+        user_number = data['user_number']
+        result = get_top_n_users(aws_cursor, user_number)
+        return jsonify({'get_top_users_result' : result})
+        
+    except Exception as e:
+
+        print ("\n\n\n-----------------------------")
+        print("Error in Database Container within the update_leaderboard function.")
+        print("ENCOUNTERED THE FOLLOWING EXCEPTION:\n", e)
+        print ("-----------------------------\n\n\n")
+
+        return jsonify({'update_leaderboard_result' : "Didn't receive any json"}), 500
+    
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", debug=True, port = 7432)
