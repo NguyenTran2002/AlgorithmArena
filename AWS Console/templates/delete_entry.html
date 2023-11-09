@@ -32,9 +32,22 @@
             border-radius: 5px;
             cursor: pointer;
         }
+
+        .table-button {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
+    <a class="table-button" href="/table?selected_table={{ session['selected_table'] }}">Back to Table</a>
     <h1>Delete Entry</h1>
     <form action="/delete_entry" method="post">
         <label for="selected_column">Select Identifier Column (MUST be a column that contains only unique values):</label><br>

@@ -216,6 +216,37 @@ def retrieve_all_rows_of_column(cursor, table_name, column_name):
     except Exception as e:
         print(f"An error occurred: {e}")
 
+def filter_by(cursor, table_name, column_name, filter_value, filter_value_type):
+    """
+    DESCRIPTION:
+        Given a table name, a column name, and a value,
+            return all the rows in the table that have that value at that column.
+
+    INPUT SIGNATURE:
+        cursor: cursor object
+        table_name: string
+        column_name: string
+        filter_value: same type as the database type
+        filter_value_type: string
+            "str" if the filter value is a string
+
+    OUTPUT SIGNATURE:
+        A list of tuples, each tuple is a row in the table
+    """
+
+    try:
+        if filter_value_type == "str":
+            query = f"SELECT * FROM {table_name} WHERE {column_name} = '{filter_value}'"
+        else:
+            query = f"SELECT * FROM {table_name} WHERE {column_name} = {filter_value}"
+        cursor.execute(query)
+        rows = cursor.fetchall()
+        return rows
+    
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        return None
+
 def get_column2_given_column1(cursor, table_name, column_1, column_2, column_1_val):
     """
     DESCRIPTION:
