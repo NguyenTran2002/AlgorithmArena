@@ -26,12 +26,20 @@ except Exception as e:
     print("ENCOUNTERED THE FOLLOWING EXCEPTION:\n", e)
 
 try:
-    aws_host, aws_port, aws_user, aws_password, aws_database = load_aws_connection_properties()
-    aws_connection, aws_cursor = connect_to_aws(aws_host, aws_port, aws_user, aws_password, aws_database)
-    print("DATABASE CONNECTED TO AWS")
+
+    aws_credentials_object = create_AWS_credentials_object()
+
+    try:
+        connection, cursor = connect_to_aws(aws_credentials_object)
+        print("DATABASE CONNECTED TO AWS")
+        connection.close()
+
+    except Exception as e:
+        print("DATABASE CANNOT CONNECT TO AWS")
+        print("ENCOUNTERED THE FOLLOWING EXCEPTION:\n", e)
 
 except Exception as e:
-    print("DATABASE CANNOT CONNECT TO AWS")
+    print("DATABASE CANNOT CREATE CREDENTIALS OBJECT.\nCheck if the relevant .env file exist.")
     print("ENCOUNTERED THE FOLLOWING EXCEPTION:\n", e)
 
 easy_problems = set()
@@ -123,41 +131,43 @@ def get_all_problems():
     global medium_problems
     global hard_problems
 
-    global aws_connection
-    global aws_cursor
+    global aws_credentials_object
 
     if len(easy_problems) == 0 and len(medium_problems) == 0 and len(hard_problems) == 0:
         
         print("\n\n\nTOP-------------------------")
 
         easy_problems = filter_by(
-            cursor=aws_cursor,
+            aws_credentials_object=aws_credentials_object,
             table_name="problems",
             column_name="difficulty",
             filter_value="easy",
             filter_value_type="str"
         )
 
+        easy_problems = [row[0] for row in easy_problems]
         print("EASY PROBLEMS:\n", easy_problems)
 
         medium_problems = filter_by(
-            cursor=aws_cursor,
+            aws_credentials_object=aws_credentials_object,
             table_name="problems",
             column_name="difficulty",
             filter_value="medium",
             filter_value_type="str"
         )
 
+        medium_problems = [row[0] for row in medium_problems]
         print("MEDIUM PROBLEMS:\n", medium_problems)
 
         hard_problems = filter_by(
-            cursor=aws_cursor,
+            aws_credentials_object=aws_credentials_object,
             table_name="problems",
             column_name="difficulty",
             filter_value="hard",
             filter_value_type="str"
         )
 
+        hard_problems = [row[0] for row in hard_problems]
         print("HARD PROBLEMS:\n", hard_problems)
 
         print("\n\n\nBOTTOM-------------------------")
@@ -174,8 +184,7 @@ def get_all_problems():
 @app.route('/authenticate', methods=['POST'])
 def authenticate():
 
-    global aws_connection
-    global aws_cursor
+    global aws_credentials_object
 
     try:
 
@@ -193,7 +202,7 @@ def authenticate():
 
             # get the correct password from the database
             correct_password = get_column2_given_column1(
-                aws_cursor,
+                aws_credentials_object,
                 "user_logins",
                 "username",
                 "password",
@@ -220,8 +229,7 @@ def authenticate():
 @app.route('/sign_up', methods=['POST'])
 def sign_up():
 
-    global aws_connection
-    global aws_cursor
+    global aws_credentials_object
 
     try:
 
@@ -237,7 +245,7 @@ def sign_up():
             username = data['username']
             password = data['password']
 
-            username_exists = check_value_exists(aws_cursor, "user_logins", "username", username)
+            username_exists = check_value_exists(aws_credentials_object, "user_logins", "username", username)
 
             if username_exists:
                 return jsonify({'sign_up_result' : "Username already exists"}), 500
@@ -246,7 +254,7 @@ def sign_up():
 
                 try:
                     new_entry = [username, password]
-                    add_entry_to_table(aws_connection, aws_cursor, "user_logins", new_entry)
+                    add_entry_to_table(aws_credentials_object, aws_cursor, "user_logins", new_entry)
                     return jsonify({'sign_up_result' : 'Success'})
                 
                 except Exception as e:
@@ -269,8 +277,7 @@ def sign_up():
 @app.route('/update_leaderboard', methods=['POST'])
 def update_leaderboard():
 
-    global aws_connection
-    global aws_cursor
+    global aws_credentials_object
 
     try:
 
@@ -286,13 +293,12 @@ def update_leaderboard():
             username = data['username']
             newly_solved_problem = data['newly_solved_problem']
 
-            username_exists = check_value_exists(aws_cursor, "user_logins", "username", username)
+            username_exists = check_value_exists(aws_credentials_object, "user_logins", "username", username)
 
             if username_exists:
                 
                 result = update_leaderboard_database(
-                    connection=aws_connection,
-                    cursor=aws_cursor,
+                    aws_credentials_object=aws_credentials_object,
                     username=username,
                     newly_solved_problem=newly_solved_problem
                 )
@@ -319,8 +325,7 @@ def update_leaderboard():
 @app.route('/get_top_users', methods=['POST'])
 def get_top_users():
 
-    global aws_connection
-    global aws_cursor
+    global aws_credentials_object
 
     try:
 
@@ -329,7 +334,7 @@ def get_top_users():
         # Check if problem is given in post request
 
         user_number = data['user_number']
-        result = get_top_n_users(aws_cursor, user_number)
+        result = get_top_n_users(aws_credentials_object, user_number)
         return jsonify({'get_top_users_result' : result})
         
     except Exception as e:
@@ -340,7 +345,6 @@ def get_top_users():
         print ("-----------------------------\n\n\n")
 
         return jsonify({'update_leaderboard_result' : "Didn't receive any json"}), 500
-    
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", debug=True, port = 7432)
