@@ -25,14 +25,13 @@ This function will take in the username and the problem the user just solved, an
 solved it. If not, it will update the database to contain the newly solved problem.
 
 """
-def update_leaderboard_database(connection, cursor, username, newly_solved_problem):
+def update_leaderboard_database(aws_credentials_object, username, newly_solved_problem):
     """
     DESCRIPTION:
         When called, this function will update the leaderboard database to reflect the newly solved problem by the user.
 
     INPUT SIGNATURE:
-        connection: connection object
-        cursor: cursor object
+        aws_credentials_object: AWS credentials object (check aws_sql_helper.py for more info)
         username: string
         newly_solved_problem: string
 
@@ -45,7 +44,7 @@ def update_leaderboard_database(connection, cursor, username, newly_solved_probl
         # find correct row given username in db
         # update both value of problem list and problem number
         solved_problems = get_column2_given_column1(
-            cursor = cursor,
+            aws_credentials_object=aws_credentials_object,
             table_name = 'leaderboard',
             column_1 = 'username',
             column_2 = 'solved_problems',
@@ -53,7 +52,7 @@ def update_leaderboard_database(connection, cursor, username, newly_solved_probl
         )
 
         num_problems_solved = get_column2_given_column1(
-            cursor = cursor,
+            aws_credentials_object=aws_credentials_object,
             table_name = 'leaderboard',
             column_1 = 'username',
             column_2 = 'number_of_solved_problems',
@@ -69,8 +68,7 @@ def update_leaderboard_database(connection, cursor, username, newly_solved_probl
         # update_row method was not in aws sql helper in database but in the aws console version, updated aws sql helper
         # in the database folder
         update_row(
-            connection = connection,
-            cursor = cursor,
+            aws_credentials_object=aws_credentials_object,
             table_name = 'leaderboard',
             identifier_column = 'username',
             identifier_value = username,
@@ -79,8 +77,7 @@ def update_leaderboard_database(connection, cursor, username, newly_solved_probl
         )
 
         update_row(
-            connection = connection,
-            cursor = cursor,
+            aws_credentials_object=aws_credentials_object,
             table_name = 'leaderboard',
             identifier_column = 'username',
             identifier_value = username,
@@ -109,14 +106,14 @@ This function will take in the number of users wanted and return the top X users
 most problems solved in a tuple format.
 """
     
-def get_top_n_users(cursor, n):
+def get_top_n_users(aws_credentials_object, n):
     """
     DESCRIPTION:
         Return the top n users with the most problems solved.
         The format is a 2D array.
 
     INPUT SIGNATURE:
-        cursor: cursor object
+        aws_credentials_object: AWS credentials object (check aws_sql_helper.py for more info)
         n: int (number of top users wanted)
 
     OUTPUT SIGNATURE:
@@ -127,7 +124,7 @@ def get_top_n_users(cursor, n):
     """
 
     rows = get_table_sorted_by(
-        cursor = cursor,
+        aws_credentials_object=aws_credentials_object,
         table_name = "leaderboard",
         sort_column = "number_of_solved_problems"
         )

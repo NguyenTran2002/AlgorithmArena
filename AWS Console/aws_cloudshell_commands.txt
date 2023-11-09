@@ -1,0 +1,5 @@
+To connect to mysql after opening up cloudshell:
+mysql -h <database endpoint> -P <port> -u <username> -p
+
+Then, connect to a specific database with
+USE <database name>;
