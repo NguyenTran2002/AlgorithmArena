@@ -244,7 +244,7 @@ def filter_by(cursor, table_name, column_name, filter_value, filter_value_type):
         return rows
     
     except Exception as e:
-        print(f"An error occurred: {e}")
+        print(f"An error occurred in HELPER: {e}")
         return None
 
 def get_column2_given_column1(cursor, table_name, column_1, column_2, column_1_val):

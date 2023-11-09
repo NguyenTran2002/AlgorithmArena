@@ -17,10 +17,22 @@ from leaderboard_helper import *
 app = Flask(__name__)
 CORS(app)
 
-client = connect_to_mongo()
+try:
+    client = connect_to_mongo()
+    print("DATABASE CONNECTED TO MONGO")
 
-aws_host, aws_port, aws_user, aws_password, aws_database = load_aws_connection_properties()
-aws_connection, aws_cursor = connect_to_aws(aws_host, aws_port, aws_user, aws_password, aws_database)
+except Exception as e:
+    print("DATABASE CANNOT CONNECT TO MONGO")
+    print("ENCOUNTERED THE FOLLOWING EXCEPTION:\n", e)
+
+try:
+    aws_host, aws_port, aws_user, aws_password, aws_database = load_aws_connection_properties()
+    aws_connection, aws_cursor = connect_to_aws(aws_host, aws_port, aws_user, aws_password, aws_database)
+    print("DATABASE CONNECTED TO AWS")
+
+except Exception as e:
+    print("DATABASE CANNOT CONNECT TO AWS")
+    print("ENCOUNTERED THE FOLLOWING EXCEPTION:\n", e)
 
 easy_problems = set()
 medium_problems = set()
@@ -116,6 +128,8 @@ def get_all_problems():
 
     if len(easy_problems) == 0 and len(medium_problems) == 0 and len(hard_problems) == 0:
         
+        print("\n\n\nTOP-------------------------")
+
         easy_problems = filter_by(
             cursor=aws_cursor,
             table_name="problems",
@@ -123,6 +137,8 @@ def get_all_problems():
             filter_value="easy",
             filter_value_type="str"
         )
+
+        print("EASY PROBLEMS:\n", easy_problems)
 
         medium_problems = filter_by(
             cursor=aws_cursor,
@@ -132,6 +148,8 @@ def get_all_problems():
             filter_value_type="str"
         )
 
+        print("MEDIUM PROBLEMS:\n", medium_problems)
+
         hard_problems = filter_by(
             cursor=aws_cursor,
             table_name="problems",
@@ -139,6 +157,10 @@ def get_all_problems():
             filter_value="hard",
             filter_value_type="str"
         )
+
+        print("HARD PROBLEMS:\n", hard_problems)
+
+        print("\n\n\nBOTTOM-------------------------")
 
     # prepare the data into json
     data = {
