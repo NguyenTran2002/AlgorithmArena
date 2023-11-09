@@ -25,6 +25,13 @@ class AWS_credentials:
     
     def get_database_name(self):
         return self.database_name
+    
+    def print_credentials(self):
+        print(f"HOST: {self.host}")
+        print(f"PORT: {self.port}")
+        print(f"USER: {self.user}")
+        print(f"PASSWORD: {self.password}")
+        print(f"DATABASE NAME: {self.database_name}")
 
 def create_AWS_credentials_object():
     """
