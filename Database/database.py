@@ -22,7 +22,9 @@ client = connect_to_mongo()
 aws_host, aws_port, aws_user, aws_password, aws_database = load_aws_connection_properties()
 aws_connection, aws_cursor = connect_to_aws(aws_host, aws_port, aws_user, aws_password, aws_database)
 
-all_problems = set()
+easy_problems = set()
+medium_problems = set()
+hard_problems = set()
 
 @app.route('/get_problem_md', methods=['POST'])
 def get_problem_md():
@@ -105,20 +107,45 @@ def get_test_cases():
 @app.route('/get_all_problems', methods=['POST'])
 def get_all_problems():
 
-    global all_problems
+    global easy_problems
+    global medium_problems
+    global hard_problems
+
     global aws_connection
     global aws_cursor
 
-    if len(all_problems) == 0:
-        problems = retrieve_all_rows_of_column(aws_cursor, "problems", "problem")
-        print("\n\n\nFROM AWS: ", problems)
-        for problem in problems:
-            all_problems.add(problem)
+    if len(easy_problems) == 0 and len(medium_problems) == 0 and len(hard_problems) == 0:
+        
+        easy_problems = filter_by(
+            cursor=aws_cursor,
+            table_name="problems",
+            column_name="difficulty",
+            filter_value="easy",
+            filter_value_type="str"
+        )
 
-    print ("\n\n\nALL PROBLEMS: ", all_problems)
+        medium_problems = filter_by(
+            cursor=aws_cursor,
+            table_name="problems",
+            column_name="difficulty",
+            filter_value="medium",
+            filter_value_type="str"
+        )
+
+        hard_problems = filter_by(
+            cursor=aws_cursor,
+            table_name="problems",
+            column_name="difficulty",
+            filter_value="hard",
+            filter_value_type="str"
+        )
 
     # prepare the data into json
-    data = {'problems' : list(all_problems)}
+    data = {
+        'easy_problems' : list(easy_problems),
+        'medium_problems' : list(medium_problems),
+        'hard_problems' : list(hard_problems)
+    }
 
     return jsonify(data)
 
