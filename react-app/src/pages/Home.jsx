@@ -4,23 +4,31 @@ import axios from 'axios';
 import Button from '@mui/material/Button';
 import { styled } from "@mui/material/styles";
 import { Link } from 'react-router-dom';
+import Split from 'react-split';
 
 function Home() {
-  const [problems, setProblems] = useState([]);
+  const [easy_problems, setEasyProblems] = useState([]);
+  const [medium_problems, setMediumProblems] = useState([]);
+  const [hard_problems, setHardProblems] = useState([]);
   // const [selectedProblem, setSelectedProblem] = useState('');
 
   // Temporary URL
-  const database_url = 'http://localhost:7432'
+  const database_url = 'http://127.0.0.1:7432'
 
   useEffect(() => {
     // Fetch all available problems from the server when the component mounts
     async function fetchProblems() {
       try {
         const response = await axios.post(database_url + '/get_all_problems'); // Replace with your API endpoint
-        const problems = response.data["problems"];
-        // const problems = ['binary_search', 'koko_eating_bananas', 'contains_duplicates']
-        console.log("problems", problems)
-        setProblems(problems);
+        const easy_problems = response.data["easy_problems"];
+        console.log(easy_problems)
+        const medium_problems = response.data["medium_problems"];
+        console.log(medium_problems)
+        const hard_problems = response.data["hard_problems"];
+        console.log(hard_problems)
+        setEasyProblems(easy_problems);
+        setMediumProblems(medium_problems);
+        setHardProblems(hard_problems);
       } catch (error) {
         console.error(`Error while retrieving problems: ${error.message}`);
       }
@@ -56,10 +64,16 @@ function Home() {
 
   });
 
-  const StyledH3 = styled('h3')({
+  const StyledH2 = styled('h2')({
     fontSize: '24px',
 
   });
+
+  const StyledH3 = styled('h3')({
+    fontSize: '20px',
+
+  });
+
 
   // const StyledButtonGroup = styled(ButtonGroup)({
   //   backgroundColor: 'lightblue',
@@ -67,20 +81,44 @@ function Home() {
 
   return (
     <div>
+      
       <StyledH1 >Welcome to Algorithm Arena!</StyledH1>
-      <StyledH3>Select a problem to get started</StyledH3>
-      <div>
-        {problems.map((problem, index) => (
-            <StyledButton key={index} component={Link} to={`/solve/${problem}`}>{getName(problem)}</StyledButton>
-        ))}
-      </div>
-      <div></div>
-      {/* <ButtonGroup variant="soft" aria-label="text button group">
-        {problems.map((problem, index) => (
-          <StyledButton key={index}>{getName(problem)}</StyledButton>
-        ))}
+      <StyledH2>Select a problem to get started</StyledH2>
+      <Split
+          sizes={[33, 33,33]} // Initial sizes of the panes in percentages
+          minSize={100} // Minimum size for a pane
+          expandToMin={false} // Whether to expand to the minimum size when resizing
+          gutterSize={50} // Size of the dividers (gutters)
+          direction='horizontal'
+          mode='horizontal'
+          className='solve-container'
+        >
+        <div>
+          <StyledH3>Easy</StyledH3>
+          <div>
+            {easy_problems.map((easy_problem, index) => (
+                <StyledButton key={index} component={Link} to={`/solve/${easy_problem}`}>{getName(easy_problem)}</StyledButton>
+            ))}
+          </div>
+        </div>
+        <div>
+          <StyledH3>Medium</StyledH3>
+          <div>
+            {medium_problems.map((medium_problem, index) => (
+                <StyledButton key={index} component={Link} to={`/solve/${medium_problem}`}>{getName(medium_problem)}</StyledButton>
+            ))}
+          </div>
+        </div>
+        <div>
+          <StyledH3>Hard</StyledH3>
+          <div>
+            {hard_problems.map((hard_problem, index) => (
+                <StyledButton key={index} component={Link} to={`/solve/${hard_problem}`}>{getName(hard_problem)}</StyledButton>
+            ))}
+          </div>
+        </div>
 
-      </ButtonGroup> */}
+      </Split>
     </div>
   );
 }
