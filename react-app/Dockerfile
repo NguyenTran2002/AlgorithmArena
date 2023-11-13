@@ -12,6 +12,7 @@ COPY package.json ./
 
 # Install project dependencies
 RUN yarn install
+RUN npm install cors
 
 # Copy the entire project to the container
 COPY . .
