@@ -15,7 +15,7 @@ function Leaderboard() {
         async function fetchLeaderboard() {
           try {
             const post_data = {
-                user_number : 10
+                'user_number' : 10
             }
 
             const response = await axios.post(database_url + '/get_top_users', post_data); // Replace with your API endpoint
