@@ -3,7 +3,7 @@ from pymongo.server_api import ServerApi
 from dotenv import load_dotenv
 import os
 import json
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin
 import collections
 import collections.abc
 collections.Iterable = collections.abc.Iterable
@@ -16,6 +16,7 @@ from leaderboard_helper import *
 
 app = Flask(__name__)
 CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
 
 try:
     client = connect_to_mongo()
@@ -47,6 +48,7 @@ medium_problems = set()
 hard_problems = set()
 
 @app.route('/get_problem_md', methods=['POST'])
+@cross_origin(origin='*')
 def get_problem_md():
 
     global client
@@ -60,7 +62,7 @@ def get_problem_md():
         # Check if problem is given in post request
         if 'problem' not in data:
             print("Error 1 Database: Missing 'problem' in the request data")
-            return jsonify({'Error 1 Database': 'Missing "problem" in the request data'}), 400
+            return jsonify({'Error 1 Database': 'Missing "problem" in the request data'})
         
         else:
 
@@ -74,7 +76,7 @@ def get_problem_md():
             markdown = collection.find_one({"problem_name" : problem})['markdown']
 
             if markdown is None:
-                return jsonify({'markdown': 'Cannot find the problem in the database'}), 500
+                return jsonify({'markdown': 'Cannot find the problem in the database'})
             
             else:
                 return jsonify({'markdown': markdown})
@@ -83,9 +85,10 @@ def get_problem_md():
 
         print("ENCOUNTERED THE FOLLOWING EXCEPTION:\n", e)
 
-        return jsonify({'markdown': "Didn't receive any json"}), 500
+        return jsonify({'markdown': "Didn't receive any json"})
 
 @app.route('/get_test_cases', methods=['POST'])
+@cross_origin(origin='*')
 def get_test_cases():
 
     global client
@@ -99,7 +102,7 @@ def get_test_cases():
         # Check if problem is given in post request
         if 'problem' not in data:
             print("Error 1 Database: Missing 'problem' in the request data")
-            return jsonify({'Error 1 Database': 'Missing "problem" in the request data'}), 400
+            return jsonify({'Error 1 Database': 'Missing "problem" in the request data'})
         
         else:
 
@@ -114,7 +117,7 @@ def get_test_cases():
             del test_suite["_id"] # this is needed because the _id field is not json serializable
 
             if test_suite is None:
-                return jsonify({'Error 2 Database': 'Cannot find the problem in the database'}), 500
+                return jsonify({'Error 2 Database': 'Cannot find the problem in the database'})
 
             return jsonify(test_suite)
             
@@ -122,9 +125,10 @@ def get_test_cases():
 
         print("ENCOUNTERED THE FOLLOWING EXCEPTION:\n", e)
 
-        return jsonify({'Error 3 Database': "Didn't receive any json."}), 500
+        return jsonify({'Error 3 Database': "Didn't receive any json."})
 
 @app.route('/get_all_problems', methods=['POST'])
+@cross_origin(origin='*')
 def get_all_problems():
 
     global easy_problems
@@ -182,6 +186,7 @@ def get_all_problems():
     return jsonify(data)
 
 @app.route('/authenticate', methods=['POST'])
+@cross_origin(origin='*')
 def authenticate():
 
     global aws_credentials_object
@@ -193,7 +198,7 @@ def authenticate():
         # Check if problem is given in post request
         if 'username' not in data or 'password' not in data:
             print("Error in Database Container within the authenticate function:\nMissing 'username' or 'password' in the request data")
-            return jsonify({'authentication_result' : 'Missing "username" or "password" in the request data'}), 400
+            return jsonify({'authentication_result' : 'Missing "username" or "password" in the request data'})
         
         else:
 
@@ -209,10 +214,10 @@ def authenticate():
                 username)
 
             if correct_password is None:
-                return jsonify({'authentication_result' : "Username Doesn't Exist"}), 500
+                return jsonify({'authentication_result' : "Username Doesn't Exist"})
         
             if correct_password != password:
-                return jsonify({'authentication_result' : 'Incorrect Password'}), 500
+                return jsonify({'authentication_result' : 'Incorrect Password'})
 
             else:
                 return jsonify({'authentication_result' : 'Success'})
@@ -224,9 +229,10 @@ def authenticate():
         print("ENCOUNTERED THE FOLLOWING EXCEPTION:\n", e)
         print ("-----------------------------\n\n\n")
 
-        return jsonify({'authentication_result' : "Didn't receive any json"}), 500
+        return jsonify({'authentication_result' : "Didn't receive any json"})
 
 @app.route('/sign_up', methods=['POST'])
+@cross_origin(origin='*')
 def sign_up():
 
     global aws_credentials_object
@@ -238,7 +244,7 @@ def sign_up():
         # Check if problem is given in post request
         if 'username' not in data or 'password' not in data:
             print("Error in Database Container within the sign_up function:\nMissing 'username' or 'password' in the request data")
-            return jsonify({'sign_up_result': 'Missing "username" or "password" in the request data'}), 400
+            return jsonify({'sign_up_result': 'Missing "username" or "password" in the request data'})
         
         else:
 
@@ -248,7 +254,7 @@ def sign_up():
             username_exists = check_value_exists(aws_credentials_object, "user_logins", "username", username)
 
             if username_exists:
-                return jsonify({'sign_up_result' : "Username already exists"}), 500
+                return jsonify({'sign_up_result' : "Username already exists"})
             
             else:
 
@@ -263,7 +269,7 @@ def sign_up():
                     print("Error encountered at MARK 1")
                     print("ENCOUNTERED THE FOLLOWING EXCEPTION:\n", e)
                     print ("-----------------------------\n\n\n")
-                    return jsonify({'sign_up_result' : "Failed"}), 500
+                    return jsonify({'sign_up_result' : "Failed"})
             
     except Exception as e:
 
@@ -272,9 +278,10 @@ def sign_up():
         print("ENCOUNTERED THE FOLLOWING EXCEPTION:\n", e)
         print ("-----------------------------\n\n\n")
 
-        return jsonify({'sign_up_result' : "Didn't receive any json"}), 500
+        return jsonify({'sign_up_result' : "Didn't receive any json"})
 
 @app.route('/update_leaderboard', methods=['POST'])
+@cross_origin(origin='*')
 def update_leaderboard():
 
     global aws_credentials_object
@@ -286,7 +293,7 @@ def update_leaderboard():
         # Check if problem is given in post request
         if 'username' not in data:
             print("Error in Database Container within the update_learderboard function:\nMissing 'username' in the request data")
-            return jsonify({'update_leaderboard_result': 'Missing "username" in the request data'}), 400
+            return jsonify({'update_leaderboard_result': 'Missing "username" in the request data'})
         
         else:
 
@@ -307,11 +314,11 @@ def update_leaderboard():
                     return jsonify({'update_leaderboard_result' : 'Success'})
                 
                 else:
-                    return jsonify({'update_leaderboard_result' : 'Failed'}), 500
+                    return jsonify({'update_leaderboard_result' : 'Failed'})
             
             else:
                 print("Error in Database Container within the update_learderboard function:\nThe username doesn't exist.")
-                return jsonify({'update_leaderboard_result' : "The username does not exist"}), 400
+                return jsonify({'update_leaderboard_result' : "The username does not exist"})
             
     except Exception as e:
 
@@ -320,31 +327,34 @@ def update_leaderboard():
         print("ENCOUNTERED THE FOLLOWING EXCEPTION:\n", e)
         print ("-----------------------------\n\n\n")
 
-        return jsonify({'update_leaderboard_result' : "Didn't receive any json"}), 500
+        return jsonify({'update_leaderboard_result' : "Didn't receive any json"})
     
 @app.route('/get_top_users', methods=['POST'])
+@cross_origin(origin='*')
 def get_top_users():
+
+    print("\n\n\nDatabase /get_top_users endpoint is called\n\n\n")
 
     global aws_credentials_object
 
     try:
 
         data = request.get_json()
-
-        # Check if problem is given in post request
-
         user_number = data['user_number']
+
+        print("\n\n\nDatabase Receives Request to Print Out Top", user_number, "Users\n\n\n")
+
         result = get_top_n_users(aws_credentials_object, user_number)
         return jsonify({'get_top_users_result' : result})
         
     except Exception as e:
 
         print ("\n\n\n-----------------------------")
-        print("Error in Database Container within the update_leaderboard function.")
+        print("Error in Database Container within the get_top_users function.")
         print("ENCOUNTERED THE FOLLOWING EXCEPTION:\n", e)
         print ("-----------------------------\n\n\n")
 
-        return jsonify({'update_leaderboard_result' : "Didn't receive any json"}), 500
+        return jsonify({'update_leaderboard_result' : "Didn't receive any json"})
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", debug=True, port = 7432)

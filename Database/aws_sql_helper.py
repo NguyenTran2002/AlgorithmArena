@@ -552,7 +552,7 @@ def rename_column(aws_credentials_object, table_name, old_column_name, new_colum
 
     try:
 
-        data_type = get_a_column_data_type(cursor, table_name, old_column_name)
+        data_type = get_a_column_data_type(aws_credentials_object, table_name, old_column_name)
 
         if data_type:
             query = f"ALTER TABLE `{table_name}` CHANGE `{old_column_name}` `{new_column_name}` {data_type}"
