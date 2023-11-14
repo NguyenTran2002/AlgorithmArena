@@ -350,7 +350,7 @@ def get_top_users():
     except Exception as e:
 
         print ("\n\n\n-----------------------------")
-        print("Error in Database Container within the update_leaderboard function.")
+        print("Error in Database Container within the get_top_users function.")
         print("ENCOUNTERED THE FOLLOWING EXCEPTION:\n", e)
         print ("-----------------------------\n\n\n")
 
