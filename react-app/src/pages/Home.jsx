@@ -58,6 +58,13 @@ function Home() {
     borderColor: 'black',
   });
 
+  const LeaderboardButton = styled(StyledButton) ({
+    position: "fixed",
+    top:"10px", 
+    left:"10px", 
+    fontSize:"1.4em"
+  });
+
   const StyledH1 = styled('h1')({
     fontSize: '56px',
     fontWeight: '30px',
@@ -81,9 +88,9 @@ function Home() {
 
   return (
     <div>
-      
       <StyledH1 >Welcome to Algorithm Arena!</StyledH1>
       <StyledH2>Select a problem to get started</StyledH2>
+      <LeaderboardButton component={Link} to={`/leaderboard`}>Leaderboard</LeaderboardButton>
       <Split
           sizes={[33, 33,33]} // Initial sizes of the panes in percentages
           minSize={100} // Minimum size for a pane

@@ -85,3 +85,31 @@ button:focus-visible {
   flex: 1; /* Take up available space */
   /* Add other styles as needed */
 }
+
+.leaderboard {
+  align-items: center;
+}
+
+/* Style for the overall table */
+table {
+  color: white;
+  background-color: black;
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  border-radius: 5%;
+}
+
+/* Style for table headers */
+th {
+  padding: 10px;
+  text-align: center;
+}
+
+/* Style for table cells */
+td {
+  border: 1px solid #ddd;
+  background-color: ivory;
+  color: black;
+  padding: 12px;
+}
