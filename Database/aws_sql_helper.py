@@ -673,3 +673,45 @@ def get_table_sorted_by(aws_credentials_object, table_name, sort_column, ascendi
     except Exception as e:
         connection.close()
         print(f"An error occurred: {e}")
+
+def search_keywords_in_database(aws_credentials_object, table_name, keywords):
+    """
+    DESCRIPTION:
+        Given a table name and a list of keywords,
+            return all the rows in the table that contain all the keywords.
+
+    INPUT SIGNATURE:
+        aws_credentials_object: AWS_credentials object
+        table_name: string
+        keywords: a list of strings
+
+    OUTPUT SIGNATURE:
+        A list of tuples, each tuple is a row in the table
+    """
+
+    try:
+        connection, cursor = connect_to_aws(aws_credentials_object)
+
+        # Get the column names for the specified table
+        cursor.execute(f"SHOW COLUMNS FROM {table_name}")
+        columns = [column[0] for column in cursor.fetchall()]
+
+        # Create a string of placeholders for the SQL query
+        placeholders = ', '.join(['%s'] * len(keywords))
+
+        # Build and execute the SQL query with the retrieved column names
+        query = f"SELECT * FROM {table_name} WHERE CONCAT_WS(' ', {', '.join(columns)}) LIKE %s"
+        cursor.execute(query, ('%' + '%'.join(keywords) + '%',))
+
+        # Fetch the results
+        results = list(cursor.fetchall())
+
+        return results
+
+    except Exception as e:
+        print("Cannot connect to AWS RDS database within the search_keywords_in_database function.")
+        print(f"An error occurred: {e}")
+
+    finally:
+        cursor.close()
+        connection.close()
