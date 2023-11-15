@@ -259,8 +259,13 @@ def sign_up():
             else:
 
                 try:
-                    new_entry = [username, password]
-                    add_entry_to_table(aws_credentials_object, aws_cursor, "user_logins", new_entry)
+
+                    new_login_entry = [username, password]
+                    add_entry_to_table(aws_credentials_object, "user_logins", new_login_entry)
+
+                    new_leaderboard_entry = [username, [], 0]
+                    add_entry_to_table(aws_credentials_object, "leaderboard", new_leaderboard_entry)
+
                     return jsonify({'sign_up_result' : 'Success'})
                 
                 except Exception as e:
