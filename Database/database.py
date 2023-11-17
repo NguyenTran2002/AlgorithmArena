@@ -87,6 +87,73 @@ def get_problem_md():
 
         return jsonify({'markdown': "Didn't receive any json"})
 
+@app.route('/get_problem_md_and_arguments', methods=['POST'])
+@cross_origin(origin='*')
+def get_problem_md_and_arguments():
+
+    global client
+
+    print("Received a request to retrieve the markdown of a problem")
+
+    try:
+        
+        data = request.get_json()
+        markdown_and_inputs = {}
+
+        # Check if problem is given in post request
+        if 'problem' not in data:
+            print("Error 1 Database: Missing 'problem' in the request data")
+            return jsonify({'Error 1 Database': 'Missing "problem" in the request data'})
+
+        else:
+
+            problem = data['problem']
+
+            collection = get_collection(
+                client = client,
+                database_name = 'qa-repo',
+                collection_name = 'markdown_repo')
+
+            markdown = collection.find_one({"problem_name" : problem})['markdown']
+
+            if markdown is None:
+                return jsonify({'markdown': 'Cannot find the problem in the database'})
+            
+            else:
+                markdown_and_inputs['markdown'] = markdown
+
+        collection = get_collection(
+            client = client,
+            database_name = 'qa-repo',
+            collection_name = 'qa')
+        
+        inputs = collection.find_one({"problem_name" : problem})['inputs']
+        
+        arguments = []
+
+        for input in inputs:
+            
+            # remove "input_" from the beginning of the input and "s" from the end of the input
+            # if those don't exist, then just append the input
+
+            if input[:6] == "input_":
+                input = input[6:]
+
+            if input[-1] == "s":
+                input = input[:-1]
+
+            arguments.append(input)
+
+        markdown_and_inputs['arguments'] = arguments
+
+        return jsonify(markdown_and_inputs)
+            
+    except Exception as e:
+
+        print("ENCOUNTERED THE FOLLOWING EXCEPTION:\n", e)
+
+        return jsonify({'markdown': "Didn't receive any json"})
+
 @app.route('/get_test_cases', methods=['POST'])
 @cross_origin(origin='*')
 def get_test_cases():
