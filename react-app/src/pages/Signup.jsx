@@ -55,8 +55,8 @@ function SignUp() {
 
     else {
 
-        username = data.get('username');
-        password = data.get('password');
+        const username = data.get('username');
+        const password = data.get('password');
 
         const postData = {
             'username': username,
