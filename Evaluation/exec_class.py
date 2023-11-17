@@ -1,3 +1,4 @@
+import multiprocessing
 def run_method_from_string(code_string, class_name, method_name, params):
     # Create an empty namespace dictionary to execute the code
     namespace = {}
@@ -20,6 +21,24 @@ def run_method_from_string(code_string, class_name, method_name, params):
 
     except Exception as e:
         return f"Error executing code: {str(e)}"
+    
+def run_method_with_timeout(code_string, class_name, method_name, params, timeout):
+    queue = multiprocessing.Queue()
+    
+    def target(queue):
+        result = run_method_from_string(code_string, class_name, method_name, params)
+        queue.put(result)
+    
+    process = multiprocessing.Process(target=target, args=(queue,))
+    process.start()
+    process.join(timeout)
+
+    if process.is_alive():
+        process.terminate()
+        process.join()
+        return f"timeout"  # Function call timed out
+    else:
+        return queue.get()
 
 # Example usage:
 python_code = """

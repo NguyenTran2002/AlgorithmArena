@@ -2,7 +2,7 @@ import json
 from flask import Flask, request, jsonify, Response
 import os
 import requests
-from exec_class import run_method_from_string
+from exec_class import run_method_from_string, run_method_with_timeout
 import time
 import collections
 import collections.abc
@@ -69,7 +69,8 @@ def evaluate():
                 params.append(test_cases_answers[key])
     for i in range(num_testcases): 
         start_time = time.time()
-        sol_result = run_method_from_string(data_dict["user_code"], "Solution", test_cases_answers["problem_name"], [param[i] for param in params])
+        # sol_result = run_method_from_string(data_dict["user_code"], "Solution", test_cases_answers["problem_name"], [param[i] for param in params])
+        sol_result = run_method_with_timeout(data_dict["user_code"], "Solution", test_cases_answers["problem_name"], [param[i] for param in params], 30)
         end_time = time.time()
         exec_time = end_time - start_time
         average_time += exec_time
@@ -78,10 +79,17 @@ def evaluate():
         answer = test_cases_answers["answers"][i]
         if sol_result != answer:
             passed = False
-            result = {
-                "result" : f"You did not pass all the test cases 😭😭\nYou messed up on test case number {i+1}.\nYour answer was: {sol_result}.\nThe actual answer is: {answer}.",
-                "success" : False
-            }
+            if sol_result == "timeout":
+                result = {
+                    "result" : f"Sorry, but your code timed out ⌛️🥲⏰. Check to see if you had an infinite loop or could implement a more efficient algorithm!",
+                    "success" : False
+                }
+            else:
+                passed = False
+                result = {
+                    "result" : f"You did not pass all the test cases 😭😭\nYou messed up on test case number {i+1}.\nYour answer was: {sol_result}.\nThe actual answer is: {answer}.",
+                    "success" : False
+                }
             break
     average_time_mil = average_time / num_testcases * 1000
     if passed:
