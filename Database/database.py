@@ -265,7 +265,7 @@ def sign_up():
                     new_login_entry = [username, password]
                     add_entry_to_table(aws_credentials_object, "user_logins", new_login_entry)
 
-                    new_leaderboard_entry = [username, [], 0]
+                    new_leaderboard_entry = [username, "[]", 0]
                     add_entry_to_table(aws_credentials_object, "leaderboard", new_leaderboard_entry)
 
                     return jsonify({'sign_up_result' : 'Success'})

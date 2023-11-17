@@ -265,6 +265,10 @@ def add_entry_to_table(aws_credentials_object, table_name, entry_list):
         
         column_names = [column[0] for column in columns]
         query = f"INSERT INTO {table_name} ({', '.join(column_names)}) VALUES ({', '.join(['%s']*len(entry_list))})"
+
+        print("Add Entry Query:")
+        print(query)
+
         cursor.execute(query, entry_list)
 
         connection.commit()
