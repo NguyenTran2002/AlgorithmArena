@@ -223,6 +223,8 @@ def authenticate():
                 return jsonify({'authentication_result' : 'Success'})
             
     except Exception as e:
+        
+        print("WHat is going on")
 
         print ("\n\n\n-----------------------------")
         print("Error in Database Container within the authenticate function.")
