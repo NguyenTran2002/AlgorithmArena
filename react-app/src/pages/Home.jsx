@@ -5,12 +5,18 @@ import Button from '@mui/material/Button';
 import { styled } from "@mui/material/styles";
 import { Link } from 'react-router-dom';
 import Split from 'react-split';
+import { useCookies } from 'react-cookie';
+import Login from './login';
 
 function Home() {
   const [easy_problems, setEasyProblems] = useState([]);
   const [medium_problems, setMediumProblems] = useState([]);
   const [hard_problems, setHardProblems] = useState([]);
-  // const [selectedProblem, setSelectedProblem] = useState('');
+  const [selectedProblem, setSelectedProblem] = useState('');
+  const [cookies, setCookies] = useCookies(['user']);
+  const [loginStatus, setLoginStatus] = useState([]);
+
+  console.log(cookies.username)
 
   // Temporary URL
   const database_url = 'http://127.0.0.1:7432'
@@ -19,6 +25,7 @@ function Home() {
     // Fetch all available problems from the server when the component mounts
     async function fetchProblems() {
       try {
+        // post request without data
         const response = await axios.post(database_url + '/get_all_problems'); // Replace with your API endpoint
         const easy_problems = response.data["easy_problems"];
         console.log(easy_problems)
@@ -35,6 +42,15 @@ function Home() {
     }
     fetchProblems();
   }, []);
+
+  useEffect(() => {
+    if (cookies.username){
+      setLoginStatus(true)
+    }
+    else {
+      setLoginStatus(false)
+    }
+  }, [cookies.username]);
 
   const getName = (problem) => {
 
@@ -72,15 +88,29 @@ function Home() {
   });
 
   const StyledH2 = styled('h2')({
-    fontSize: '24px',
+    fontSize: '30px',
 
   });
 
   const StyledH3 = styled('h3')({
-    fontSize: '20px',
+    fontSize: '26px',
 
   });
+  
 
+  const SettingsButton = styled(StyledButton) ({
+    position: "fixed",
+    top:"10px", 
+    right:'10px', 
+    fontSize:"1.4em"
+  });
+
+  const LoginButton = styled(StyledButton) ({
+    position: "fixed",
+    top:"10px", 
+    right:'10px', 
+    fontSize:"1.4em"
+  });
 
   // const StyledButtonGroup = styled(ButtonGroup)({
   //   backgroundColor: 'lightblue',
@@ -90,7 +120,16 @@ function Home() {
     <div>
       <StyledH1 >Welcome to Algorithm Arena!</StyledH1>
       <StyledH2>Select a problem to get started</StyledH2>
+      <div>
+        {
+          loginStatus ? 
+            <SettingsButton component={Link} to={'/settings'}>Settings</SettingsButton>
+            :
+            <LoginButton component={Link} to={'/login'}>Login</LoginButton>
+        }
+      </div>
       <LeaderboardButton component={Link} to={`/leaderboard`}>Leaderboard</LeaderboardButton>
+      {/* <SettingsButton component={Link} to={'/settings'}>Settings</SettingsButton> */}
       <Split
           sizes={[33, 33,33]} // Initial sizes of the panes in percentages
           minSize={100} // Minimum size for a pane
