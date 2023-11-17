@@ -61,8 +61,14 @@ def update_leaderboard_database(aws_credentials_object, username, newly_solved_p
 
         # want to check if problem already solved then don't need this code
         if newly_solved_problem not in solved_problems:
-            solved_problems = solved_problems[1:-1]
-            solved_problems = '[' + solved_problems + ", " + newly_solved_problem + "]"
+
+            if solved_problems == "[]":
+                solved_problems = "['" + newly_solved_problem + "']"
+
+            else:
+                solved_problems = solved_problems[1:-1]
+                solved_problems = "[" + solved_problems + ", '" + newly_solved_problem + "']"
+            
             num_problems_solved += 1
         
         # update_row method was not in aws sql helper in database but in the aws console version, updated aws sql helper
