@@ -16,6 +16,7 @@ function Solve() {
     const { problem } = useParams();
     const [markdownContent, setMarkdownContent] = useState('');
     const navigate = useNavigate()
+    const [problemName, setProblemName] = useState('');
 
     const [value, setValue] = useState();
     const onChange = useCallback((val) => {
@@ -37,6 +38,9 @@ function Solve() {
           .catch((error) => {
             console.error('Error loading Markdown content:', error);
           });
+        
+        setProblemName(`class Solution(object):\n  def ${problem}(self, nums, target):\n  # Write your solution here\n\n`)
+
     }, [problem]);
 
     const redirectPage = () => {
@@ -70,7 +74,7 @@ function Solve() {
                 </div>
                 <div className='w-full overflow-auto'>
                     <CodeMirror
-                        value={'class Solution(object):\n  def search(self, nums, target):\n  # Write your solution here\n\n'}
+                        value={problemName}
                         theme={vscodeDark}
                         // onChange={onChange}
                         extensions={[python()]}
