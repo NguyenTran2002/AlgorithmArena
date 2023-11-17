@@ -3,6 +3,8 @@ import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { useCookies } from 'react-cookie';
+import { Audio } from 'react-loader-spinner'
+import { HashLoader } from 'react-spinners'
 
 function Result() {
 
@@ -16,7 +18,7 @@ function Result() {
     const { state } = location;
     const { problem, user_code } = state || {};
     const [result, setResult] = useState();
-    const [success, setSuccess] = useState();
+    const [success, setSuccess] = useState(null);
     const [cookies, setCookie] = useCookies(['user'])
 
     useEffect(() => {
@@ -62,12 +64,45 @@ function Result() {
         fetchResult();
       }, []);
     
+    console.log(success)
     return (
 
         <div>
-            <h1 className='h1'>Your result:</h1>
+            {
+              success == null ?
+                        
+              <div>
+                <h1>Evaluating code</h1>
+                <div style={{ 
+                    display: 'flex', 
+                    justifyContent: 'center', 
+                    alignItems: 'center', 
+                    marginTop: '80px',
+                  }}>
+                    <HashLoader color="#36d7b7" size='100'/>
+                </div>
+              </div>
+              :
+              <div>
+                <h1 className='h1'>Your result:</h1>
+                <h3>{result}</h3>
+                <p>{success ? 'SUCCESS' : 'FAILED'}</p>
+              </div>
+            }
+            {/* <h1>Evaluating code</h1>
+            <div style={{ 
+                display: 'flex', 
+                justifyContent: 'center', 
+                alignItems: 'center', 
+                marginTop: '80px',
+              }}>
+                <HashLoader color="#36d7b7" size='100'/>
+            </div> */}
+
+
+            {/* <h1 className='h1'>Your result:</h1>
             <h3>{result}</h3>
-            <p>{success ? 'SUCCESS' : 'FALSE'}</p>
+            <p>{success ? 'SUCCESS' : 'FALSE'}</p> */}
         </div>
     );
 }
