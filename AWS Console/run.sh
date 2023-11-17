@@ -1,9 +1,9 @@
 # Function to determine the operating system
 run_by_OS() {
     if [ "$(uname)" == "Darwin" ]; then
-        open "http://localhost:8080"  # macOS command
+        open "http://localhost:2828"  # macOS command
     elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
-        xdg-open "http://localhost:8080"  # Linux command
+        xdg-open "http://localhost:2828"  # Linux command
     else
         echo "Consult ReadMe for Instruction on Windows."
     fi
@@ -13,6 +13,6 @@ run_by_OS() {
 docker-compose up --build -d
 
 # Wait for a brief moment for the containers to initialize
-sleep 5
+sleep 2
 
 $(run_by_OS)
