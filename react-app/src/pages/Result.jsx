@@ -74,7 +74,7 @@ function Result() {
       {
         success == null ?
           <div>
-            <h1>Evaluating code</h1>
+            <h1>Evaluating Code</h1>
             <div style={{
               display: 'flex',
               justifyContent: 'center',
