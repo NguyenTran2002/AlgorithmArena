@@ -1,22 +1,21 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import CodeMirror from "@uiw/react-codemirror";
 import { vscodeDark } from "@uiw/codemirror-theme-vscode";
-// import { javascript } from "@codemirror/lang-javascript";
 import { python } from '@codemirror/lang-python'
 import MarkdownIt from 'markdown-it';
 import Split from 'react-split';
 import { Button } from '@mui/material';
+import axios from 'axios';
 
 function Solve() {
-    // Get the current location
-    // const location = useLocation();
   
     // Extract the 'problem' parameter from the URL
     const { problem } = useParams();
     const [markdownContent, setMarkdownContent] = useState('');
     const navigate = useNavigate()
     const [problemName, setProblemName] = useState('');
+    const database_url = 'http://127.0.0.1:7432'
 
     const [value, setValue] = useState();
     const onChange = useCallback((val) => {
@@ -25,23 +24,35 @@ function Solve() {
     }, []);
 
     useEffect(() => {
-        // Assuming problem.md is located in the public folder
-        fetch(`/problems/${problem}.md`)
-          .then((response) => response.text())
-          .then((text) => {
-            // Parse the Markdown content to HTML
-            const md = new MarkdownIt();
-            const htmlContent = md.render(text);
-    
-            setMarkdownContent(htmlContent);
-          })
-          .catch((error) => {
-            console.error('Error loading Markdown content:', error);
-          });
-        
-        setProblemName(`class Solution(object):\n  def ${problem}(self, nums, target):\n  # Write your solution here\n\n`)
 
-    }, [problem]);
+        async function fetchResult() {
+          try {
+            const post_data = {
+              'problem': problem,
+    
+            };
+            // post request with data
+            const response = await axios.post(database_url + '/get_problem_md_and_arguments', post_data); // Replace with your API endpoint
+            //console.log(response)
+            const markdown = response.data['markdown'];
+            const args = response.data['arguments'];
+            const joinedArgs = args.join(', ');
+
+            setProblemName(`class Solution(object):\n  def ${problem}(self, ${joinedArgs}):\n  # Write your solution here\n\n`)
+
+            const md = new MarkdownIt();
+            const htmlContent = md.render(markdown);
+    
+            setMarkdownContent(htmlContent); 
+    
+          } catch (error) {
+            console.error(`Error while retrieving problems: ${error.message}`);
+          }
+        }
+    
+        fetchResult();
+      }, []);
+    
 
     const redirectPage = () => {
         navigate('/result', {state:{problem:problem, user_code:value}});
@@ -88,49 +99,7 @@ function Solve() {
         </div>
     );
   }
+
+  
   
   export default Solve;
-  
-
-
-// function Solve() {
-//   const { problem } = useParams();
-//   const [markdownContent, setMarkdownContent] = useState('');
-
-//   useEffect(() => {
-//     // Assuming problem.md is located in the public folder
-//     fetch(`/problem/${problem}.md`)
-//       .then((response) => response.text())
-//       .then((text) => {
-//         // Parse the Markdown content to HTML
-//         const md = new MarkdownIt();
-//         const htmlContent = md.render(text);
-
-//         setMarkdownContent(htmlContent);
-//       })
-//       .catch((error) => {
-//         console.error('Error loading Markdown content:', error);
-//       });
-//   }, [problem]);
-
-//   return (
-//     <div dangerouslySetInnerHTML={{ __html: markdownContent }}></div>
-//   );
-// }
-
-// export default Solve;
-
-
-// return (
-//     <Split
-//       sizes={[25, 50, 25]} // Initial sizes of the panes in percentages
-//       minSize={100} // Minimum size for a pane
-//       expandToMin={false} // Whether to expand to the minimum size when resizing
-//       gutterSize={10} // Size of the dividers (gutters)
-//     >
-//       <div>Pane 1</div>
-//       <div>Pane 2</div>
-//       <div>Pane 3</div>
-//     </Split>
-//   );
-// }

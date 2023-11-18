@@ -6,7 +6,6 @@ import { styled } from "@mui/material/styles";
 import { Link } from 'react-router-dom';
 import Split from 'react-split';
 import { useCookies } from 'react-cookie';
-import Login from './login';
 
 function Home() {
   const [easy_problems, setEasyProblems] = useState([]);
@@ -111,10 +110,6 @@ function Home() {
     right:'10px', 
     fontSize:"1.4em"
   });
-
-  // const StyledButtonGroup = styled(ButtonGroup)({
-  //   backgroundColor: 'lightblue',
-  // });
 
   return (
     <div>

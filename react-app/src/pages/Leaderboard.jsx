@@ -29,8 +29,6 @@ function Leaderboard() {
         }
         fetchLeaderboard();
 
-        // const data = [['John', 10], ['Nguyen', 20], ['Kristo', 30], ['Albert', 40], ['Geoff', 50], ['Matt', 60]];
-        // setLeaderboard(data);
       }, []);
 
       const StyledButton = styled(Button)({

@@ -3,9 +3,7 @@ import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useCookies } from 'react-cookie';
-import { Audio } from 'react-loader-spinner'
 import { HashLoader } from 'react-spinners'
-// import { Link } from 'react-router-dom';
 
 function Result() {
 
@@ -61,9 +59,6 @@ function Result() {
           }
         }
 
-
-        // console.log(result)
-        // console.log(success)
       } catch (error) {
         console.error(`Error while retrieving problems: ${error.message}`);
       }
@@ -78,7 +73,6 @@ function Result() {
     <div>
       {
         success == null ?
-
           <div>
             <h1>Evaluating code</h1>
             <div style={{
@@ -100,20 +94,6 @@ function Result() {
             </form>
           </div>
       }
-      {/* <h1>Evaluating code</h1>
-            <div style={{ 
-                display: 'flex', 
-                justifyContent: 'center', 
-                alignItems: 'center', 
-                marginTop: '80px',
-              }}>
-                <HashLoader color="#36d7b7" size='100'/>
-            </div> */}
-
-
-      {/* <h1 className='h1'>Your result:</h1>
-            <h3>{result}</h3>
-            <p>{success ? 'SUCCESS' : 'FALSE'}</p> */}
     </div>
   );
 }
