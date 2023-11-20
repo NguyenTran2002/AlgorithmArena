@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Selected Table</title>
     <style>
@@ -7,21 +8,27 @@
             font-family: Arial, sans-serif;
             text-align: center;
         }
+
         h1 {
             color: #333;
         }
+
         table {
             margin: 20px auto;
             border-collapse: collapse;
             width: 80%;
         }
-        th, td {
+
+        th,
+        td {
             border: 1px solid #ddd;
             padding: 8px;
         }
+
         th {
             background-color: #f2f2f2;
         }
+
         .home-button {
             display: block;
             margin: 20px auto;
@@ -33,6 +40,7 @@
             border-radius: 5px;
             cursor: pointer;
         }
+
         .action-button {
             display: inline-block;
             margin: 10px;
@@ -46,23 +54,10 @@
         }
     </style>
 </head>
+
 <body>
     <a class="home-button" href="/">Home</a>
     <h1>Selected Table: {{ table_name }}</h1>
-    <table>
-        <tr>
-            {% for column in columns_names %}
-                <th>{{ column }}</th>
-            {% endfor %}
-        </tr>
-        {% for row in rows %}
-            <tr>
-                {% for value in row %}
-                    <td>{{ value }}</td>
-                {% endfor %}
-            </tr>
-        {% endfor %}
-    </table>
     <div>
         <a class="action-button" href="/add_entry">Add Entry</a>
         <a class="action-button" href="/delete_entry">Delete Entry</a>
@@ -71,7 +66,22 @@
         <a class="action-button" href="/add_column">Add Column</a>
         <a class="action-button" href="/remove_column">Remove Column</a>
         <a class="action-button" href="/rename_column">Rename Column</a>
-        
+
     </div>
+    <table>
+        <tr>
+            {% for column in columns_names %}
+            <th>{{ column }}</th>
+            {% endfor %}
+        </tr>
+        {% for row in rows %}
+        <tr>
+            {% for value in row %}
+            <td>{{ value }}</td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </table>
 </body>
+
 </html>
