@@ -1,7 +1,7 @@
 # AlgorithmArena
 Fight to the death with cutthroat algorithms!
 
-# Master Documetation
+# Master Documentation
 To access the full documentation of this project, visit the Project-Info -> Master Documentation.pdf
 
 # Acknowledgements
