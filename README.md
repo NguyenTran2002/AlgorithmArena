@@ -1,131 +1,88 @@
 
-# Algorithm Arena
+# Algorithm Arena: Compete, Learn, and Win
 
-**Welcome to Algorithm Arena**, a gamified algorithm testbed designed to challenge your coding skills. Users can solve coding problems similar to LeetCode or Codeforces, and soon, we will introduce functionality for users to upload their own challenges and compete with others in real-time competitions.
+![Python](https://img.shields.io/badge/Language-Python-blue)
+![Flask](https://img.shields.io/badge/Backend-Flask-green)
+![React](https://img.shields.io/badge/Frontend-React-blue)
+![Docker](https://img.shields.io/badge/Deployment-Docker-yellow)
+![AWS](https://img.shields.io/badge/Hosting-AWS-EC2-orange)
 
----
-
-## Table of Contents
-1. [Overview](#overview)  
-2. [Getting Started](#getting-started)  
-   - [Prerequisites](#prerequisites)  
-   - [Quick Start](#quick-start)  
-   - [Docker Setup](#docker-setup)  
-3. [Functionalities](#functionalities)  
-   - [Algorithm Testbed](#algorithm-testbed)  
-   - [User Authentication & Progress Tracking](#user-authentication--progress-tracking)  
-   - [Leaderboard](#leaderboard)  
-4. [Project Structure](#project-structure)  
-   - [React Main App](#react-main-app)  
-   - [Database Container](#database-container)  
-   - [Evaluation Container](#evaluation-container)  
-5. [Correct Code Access](#correct-code-access)  
-6. [Acknowledgments](#acknowledgments)
+Welcome to **Algorithm Arena**, an algorithm testbed where users can solve coding problems with a gamified perspective. Our platform allows users to submit solutions to various algorithmic challenges, and it evaluates their performance. Built with a multi-container architecture, Algorithm Arena is designed for scalability and engaging competition.
 
 ---
 
-## Overview
-Algorithm Arena provides a testbed for algorithm enthusiasts to practice and improve their problem-solving skills. Users can select from a variety of challenges, attempt solutions in an IDE-like interface, and track their progress over time. We plan to extend this platform to allow custom problem uploads and multiplayer competitions.
+## 🌟 Features
+
+- **Algorithm Battles:** Choose from a curated list of problems with varying difficulty (easy, medium, hard), and test your algorithms in real-time.
+- **Leaderboard:** Track your progress and compete with the top five users displayed on the leaderboard.
+- **Log-in System:** Sign up or log in to track your progress. Your achievements are stored in our AWS-hosted database, and log-ins are remembered using cookies.
 
 ---
 
-## Getting Started
+## 🚀 Quick Start
 
 ### Prerequisites
-This is a server-based application, and some features require authentication keys. Please contact any of the following team members to request these keys:
-- **Albert Jing**  
-- **Geoffrey Jing**  
-- **Christo Polydorou**  
-- **Nguyen Tran**
 
-Additionally, ensure Docker is installed on your system. Follow the [Docker installation guide](https://docs.docker.com/get-docker/) for platform-specific instructions.
+- Docker (for running the containers)
+- Authentication keys (obtain from one of the project owners)
 
----
+### Installation & Setup
 
-### Quick Start  
-**For Mac and Linux:**
-1. Install Docker if not already installed.  
-2. Clone this repository and navigate to the project directory in the terminal.  
-3. Run the following command once to make the script executable:
-   ```bash
-   chmod +x run.sh
-   ```
-4. Start the application:
-   ```bash
-   ./run.sh
-   ```
-   > The browser will open automatically. The first launch may take 40-50 seconds, while subsequent runs will take less than 5 seconds.
+#### Clone the Repository
 
-5. On subsequent runs, you can skip steps 1-3 and directly execute:
-   ```bash
-   ./run.sh
-   ```
+```bash
+git clone https://github.com/your_repo/algorithm-arena.git
+cd algorithm-arena
+```
 
-**For Windows:**  
-Follow the [Docker Setup](#docker-setup) instructions below.
+#### Docker Setup
 
----
+##### On Mac/Linux
+1. Install Docker.
+2. Run the following command to make the setup script executable:
+```bash
+chmod +x run.sh
+```
+3. Start the application with:
+```bash
+./run.sh
+```
 
-### Docker Setup
-**For All Systems:**
-1. Ensure Docker is installed and running.  
-2. In the terminal, navigate to the directory where you cloned the repository.  
-3. Build and start the application with:
-   ```bash
-   docker compose up --build
-   ```
-4. Open your browser and visit: `http://localhost:8080/`
+##### On Windows
+
+1. Install Docker.
+2. Open a terminal and run the following command to build and run the containers:
+```bash
+docker-compose up --build
+```
+
+3. Access the app by navigating to `http://localhost:8080/`.
 
 ---
 
-## Functionalities
+## 🔑 Environment Variables
 
-### Algorithm Testbed
-- Select from **10 curated coding problems** spanning **easy, medium, and hard** levels.  
-- Write and submit solutions directly in the integrated IDE.  
-- Get instant feedback on your submission:
-  - **Success:** View the runtime per test case.  
-  - **Failure:** See which test cases failed and compare expected vs. actual outputs.  
-  - **Timeout:** Detect and manage inefficient code or infinite loops.  
-
-### User Authentication & Progress Tracking
-- **Log in or Sign up** to save your progress.  
-- Your progress is stored in an **AWS-hosted MySQL** database and remembered using cookies.
-
-### Leaderboard
-- Compete to reach the **top 5 leaderboard** and showcase your problem-solving achievements.
+You will need to set up the following environment variables in a `.env` file for the application to run smoothly.
+Please contact one of the authors for this.
 
 ---
 
-## Project Structure
+## 💡 Future Enhancements
 
-### React Main App  
-Handles the **frontend interface** and communication between containers. Key functions include:
-- Fetching and displaying problems and starter code from the database.  
-- Sending user solutions to the evaluation container for testing.  
-- Managing user logins and leaderboard displays through API calls to the database container.
-
-### Database Container  
-Facilitates interactions with the AWS MySQL and MongoDB servers. Responsibilities include:
-- Retrieving problem descriptions, arguments, and test cases.  
-- Handling user authentication and leaderboard updates.  
-
-### Evaluation Container  
-The core of the application, responsible for:
-- Testing user code against predefined test cases.  
-- Ensuring solutions are efficient and free of infinite loops.  
-- Returning success/failure results along with average runtimes.
+- **User-uploaded Problems:** Users will be able to upload their own problems for others to solve.
+- **Competition Mode:** Start a competition session between multiple participants.
+- **OAuth Integration:** Allow users to sign in using third-party services like Google or GitHub.
+- **CI/CD Pipelines:** Automated deployment with GitHub Actions or AWS pipelines.
 
 ---
 
-## Correct Code Access
-You can find the correct solutions for all available problems under the `./Q&A/solutions` directory. Use these for reference while exploring the platform.
+## 📧 Contact
+
+For inquiries, please contact one of the project authors:  
+📧 Albert Jing, Geoffrey Jing, Christo Polydorou, Nguyen Tran
 
 ---
 
-## Acknowledgments
-We extend our gratitude to **Team Scramble** (John, Sunny, Artem, and Roo) for their invaluable help in building the React-based leaderboard page.
+## 🎉 Acknowledgments
 
----
-
-This README provides a comprehensive overview and usage instructions for Algorithm Arena. We look forward to your contributions and feedback as we continue to improve the platform.
+Special thanks to team Scramble (John, Sunny, Artem, Roo) for helping implement the leaderboard feature.
