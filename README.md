@@ -1,11 +1,10 @@
 
 # Algorithm Arena: Compete, Learn, and Win
 
-![Python](https://img.shields.io/badge/Language-Python-blue)
 ![Flask](https://img.shields.io/badge/Backend-Flask-green)
 ![React](https://img.shields.io/badge/Frontend-React-blue)
 ![Docker](https://img.shields.io/badge/Deployment-Docker-yellow)
-![AWS](https://img.shields.io/badge/Hosting-AWS-EC2-orange)
+[![AWS](https://img.shields.io/badge/AWS-%23FF9900.svg?logo=amazon-web-services&logoColor=white)](#)
 
 Welcome to **Algorithm Arena**, an algorithm testbed where users can solve coding problems with a gamified perspective. Our platform allows users to submit solutions to various algorithmic challenges, and it evaluates their performance. Built with a multi-container architecture, Algorithm Arena is designed for scalability and engaging competition.
 
